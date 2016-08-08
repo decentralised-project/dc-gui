@@ -5,11 +5,11 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#include "DesktopForm.h"
+#include "dc_gui_forms.h"
 
 ///////////////////////////////////////////////////////////////////////////
 
-DesktopForm::DesktopForm( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
+MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxFrame( parent, id, title, pos, size, style )
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
@@ -54,6 +54,42 @@ DesktopForm::DesktopForm( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 }
 
-DesktopForm::~DesktopForm()
+MainDcForm::~MainDcForm()
+{
+}
+
+LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer3;
+	bSizer3 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	
+	m_button2 = new wxButton( this, wxID_ANY, wxT("Login with Existing User"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_button2, 5, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_button3 = new wxButton( this, wxID_ANY, wxT("Create a New User"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_button3, 5, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer3->Add( bSizer9, 1, wxEXPAND, 5 );
+	
+	
+	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	this->SetSizer( bSizer3 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+LoginDialog::~LoginDialog()
 {
 }

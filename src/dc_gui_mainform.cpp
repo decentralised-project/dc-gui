@@ -1,31 +1,31 @@
-#include "DesktopFormOverriden.h"
+#include "dc_gui_mainform.h"
 
-DesktopFormOveridden::DesktopFormOveridden(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
-	: DesktopForm(parent, id, title, pos, size, style)
+dc_gui_mainform::dc_gui_mainform(wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
+	: MainDcForm(parent, id, title, pos, size, style)
 {
 }
 
-DesktopFormOveridden::~DesktopFormOveridden()
+dc_gui_mainform::~dc_gui_mainform()
 {
 	if (_manager)
 		delete _manager;
 }
 
-void DesktopFormOveridden::Init()
+void dc_gui_mainform::Init()
 {
 	txtMain->BeginTextColour(wxColour(0, 90, 0, 0));
-	txtMain->WriteText("Welcome to ChatExample!\r\n");
+	txtMain->WriteText("Decentralised GUI v1.0.0\r\n");
 	txtMain->EndTextColour();
 
 	_manager = new p2p_manager();
-	_manager->Log.connect(boost::bind(&DesktopFormOveridden::OnLog, this, _1));
-	_manager->NodeConnected.connect(boost::bind(&DesktopFormOveridden::OnNodeConnected, this, _1, _2, _3));
-	_manager->DataReceived.connect(boost::bind(&DesktopFormOveridden::OnDataReceived, this, _1, _2));
-	_manager->NodeDisconnected.connect(boost::bind(&DesktopFormOveridden::OnNodeDisconnected, this, _1));
+	_manager->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));
+	_manager->NodeConnected.connect(boost::bind(&dc_gui_mainform::OnNodeConnected, this, _1, _2, _3));
+	_manager->DataReceived.connect(boost::bind(&dc_gui_mainform::OnDataReceived, this, _1, _2));
+	_manager->NodeDisconnected.connect(boost::bind(&dc_gui_mainform::OnNodeDisconnected, this, _1));
 	_manager->Run(6453);
 }
 
-void DesktopFormOveridden::OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId)
+void dc_gui_mainform::OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId)
 {
 	std::string txt;
 	if (isIncoming) {
@@ -44,13 +44,13 @@ void DesktopFormOveridden::OnNodeConnected(bool isIncoming, p2p_connection::poin
 	writeToRichText(txt);
 }
 
-void DesktopFormOveridden::OnLog(std::string msg)
+void dc_gui_mainform::OnLog(std::string msg)
 {
 	std::string txt = msg;
 	writeToRichText(txt);
 }
 
-void DesktopFormOveridden::OnDataReceived(p2p_connection::pointer connection, p2p_packet packet)
+void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_packet packet)
 {
 	std::stringstream ss;
 	ss << "Received from " << connection->Socket().remote_endpoint();
@@ -64,7 +64,7 @@ void DesktopFormOveridden::OnDataReceived(p2p_connection::pointer connection, p2
 	writeToRichText(txt);
 }
 
-void DesktopFormOveridden::OnNodeDisconnected(boost::uuids::uuid remoteId)
+void dc_gui_mainform::OnNodeDisconnected(boost::uuids::uuid remoteId)
 {
 	std::stringstream ss;
 	ss << "Disconnected: " << remoteId;
@@ -72,7 +72,7 @@ void DesktopFormOveridden::OnNodeDisconnected(boost::uuids::uuid remoteId)
 	writeToRichText(std::string(ss.str()));
 }
 
-void DesktopFormOveridden::writeToRichText(std::string txt)
+void dc_gui_mainform::writeToRichText(std::string txt)
 {
 	if (!wxIsMainThread())
 		wxMutexGuiEnter();

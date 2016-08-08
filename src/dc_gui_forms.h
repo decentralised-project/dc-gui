@@ -5,8 +5,8 @@
 // PLEASE DO "NOT" EDIT THIS FILE!
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __DESKTOPFORM_H__
-#define __DESKTOPFORM_H__
+#ifndef __DC_GUI_FORMS_H__
+#define __DC_GUI_FORMS_H__
 
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
@@ -24,14 +24,16 @@
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/frame.h>
+#include <wx/button.h>
+#include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
 
 ///////////////////////////////////////////////////////////////////////////////
-/// Class DesktopForm
+/// Class MainDcForm
 ///////////////////////////////////////////////////////////////////////////////
-class DesktopForm : public wxFrame 
+class MainDcForm : public wxFrame 
 {
 	private:
 	
@@ -44,10 +46,28 @@ class DesktopForm : public wxFrame
 	
 	public:
 		
-		DesktopForm( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ChatTest"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 586,461 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		MainDcForm( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Decentralised GUI"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 586,461 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
-		~DesktopForm();
+		~MainDcForm();
 	
 };
 
-#endif //__DESKTOPFORM_H__
+///////////////////////////////////////////////////////////////////////////////
+/// Class LoginDialog
+///////////////////////////////////////////////////////////////////////////////
+class LoginDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxButton* m_button2;
+		wxButton* m_button3;
+	
+	public:
+		
+		LoginDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Login"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 333,265 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~LoginDialog();
+	
+};
+
+#endif //__DC_GUI_FORMS_H__

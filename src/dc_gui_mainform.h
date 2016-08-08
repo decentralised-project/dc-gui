@@ -1,7 +1,7 @@
 #ifndef __DESKTOPFORM_OVERIDDEN_H__
 #define __DESKTOPFORM_OVERIDDEN_H__
 
-#include "DesktopForm.h"
+#include "dc_gui_forms.h"
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/richtext/richtextctrl.h>
@@ -25,13 +25,13 @@
 using namespace boost;
 using namespace dcp2p;
 
-class DesktopFormOveridden : public DesktopForm
+class dc_gui_mainform : public MainDcForm
 {
 
 public:
 
-	DesktopFormOveridden(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("ChatExample"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(586, 461), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
-	~DesktopFormOveridden();
+	dc_gui_mainform(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Decentralised GUI"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(586, 461), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
+	~dc_gui_mainform();
 
 	void Init();
 
