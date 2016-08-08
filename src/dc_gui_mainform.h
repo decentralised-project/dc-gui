@@ -21,6 +21,11 @@
 #include <sstream>
 #include <boost/bind.hpp>
 #include <iostream>
+#include "dc_gui_logindialog.h"
+
+#if WIN32
+#include "Win32/resource.h"
+#endif
 
 using namespace boost;
 using namespace dcp2p;
@@ -37,6 +42,7 @@ public:
 
 private:
 	p2p_manager* _manager;
+	dc_gui_logindialog* login_dialog;
 
 	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId);
 	void OnLog(std::string msg);

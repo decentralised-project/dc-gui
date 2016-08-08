@@ -9,13 +9,23 @@ dc_gui_mainform::~dc_gui_mainform()
 {
 	if (_manager)
 		delete _manager;
+
+	if (login_dialog)
+		delete login_dialog;
 }
 
 void dc_gui_mainform::Init()
 {
+#if WIN32
+	SetIcon(wxICON(IDI_ICON1));
+#endif
+
 	txtMain->BeginTextColour(wxColour(0, 90, 0, 0));
 	txtMain->WriteText("Decentralised GUI v1.0.0\r\n");
 	txtMain->EndTextColour();
+
+	login_dialog = new dc_gui_logindialog(this);
+	login_dialog->Show();
 
 	_manager = new p2p_manager();
 	_manager->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));

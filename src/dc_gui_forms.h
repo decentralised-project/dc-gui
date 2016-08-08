@@ -24,7 +24,10 @@
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
 #include <wx/frame.h>
+#include <wx/stattext.h>
 #include <wx/button.h>
+#include <wx/panel.h>
+#include <wx/notebook.h>
 #include <wx/dialog.h>
 
 ///////////////////////////////////////////////////////////////////////////
@@ -60,12 +63,16 @@ class LoginDialog : public wxDialog
 	private:
 	
 	protected:
-		wxButton* m_button2;
+		wxNotebook* tabsLogin;
+		wxPanel* pnlExisting;
+		wxStaticText* m_staticText2;
+		wxListBox* m_listBox2;
 		wxButton* m_button3;
+		wxPanel* pnlCreate;
 	
 	public:
 		
-		LoginDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Login"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 333,265 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		LoginDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Login"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 333,265 ), long style = wxCAPTION|wxCLOSE_BOX|wxSTAY_ON_TOP|wxSYSTEM_MENU ); 
 		~LoginDialog();
 	
 };

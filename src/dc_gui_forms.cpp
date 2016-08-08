@@ -65,23 +65,32 @@ LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title
 	wxBoxSizer* bSizer3;
 	bSizer3 = new wxBoxSizer( wxVERTICAL );
 	
+	tabsLogin = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	pnlExisting = new wxPanel( tabsLogin, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer5;
+	bSizer5 = new wxBoxSizer( wxVERTICAL );
 	
-	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	m_staticText2 = new wxStaticText( pnlExisting, wxID_ANY, wxT("Select an existing user from the list"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText2->Wrap( -1 );
+	bSizer5->Add( m_staticText2, 1, wxALL, 10 );
 	
-	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	m_listBox2 = new wxListBox( pnlExisting, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer5->Add( m_listBox2, 8, wxALL|wxEXPAND, 10 );
 	
-	m_button2 = new wxButton( this, wxID_ANY, wxT("Login with Existing User"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_button2, 5, wxALIGN_CENTER|wxALL, 5 );
+	m_button3 = new wxButton( pnlExisting, wxID_ANY, wxT("Login"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_button3->Enable( false );
 	
-	m_button3 = new wxButton( this, wxID_ANY, wxT("Create a New User"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_button3, 5, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer3->Add( bSizer9, 1, wxEXPAND, 5 );
+	bSizer5->Add( m_button3, 1, wxALIGN_RIGHT|wxALL, 10 );
 	
 	
-	bSizer3->Add( 0, 0, 1, wxEXPAND, 5 );
+	pnlExisting->SetSizer( bSizer5 );
+	pnlExisting->Layout();
+	bSizer5->Fit( pnlExisting );
+	tabsLogin->AddPage( pnlExisting, wxT("Existing User"), true );
+	pnlCreate = new wxPanel( tabsLogin, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	tabsLogin->AddPage( pnlCreate, wxT("Create User"), false );
+	
+	bSizer3->Add( tabsLogin, 1, wxEXPAND | wxALL, 5 );
 	
 	
 	this->SetSizer( bSizer3 );

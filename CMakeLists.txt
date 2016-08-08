@@ -47,13 +47,22 @@ SET(PROJECT_LIBRARIES
 	dcp2p
 )
 
+# Set up application resource files for Windows
+if( WIN32 )
+
+	FILE( GLOB PROJECT_SOURCE_FILES ${PROJECT_SOURCE_FILES} "${CMAKE_SOURCE_DIR}/src/Win32/*.h" )
+	FILE( GLOB PROJECT_RC_FILE  "${CMAKE_SOURCE_DIR}/src/Win32/dcgui.rc" )
+
+endif( WIN32 )
+
+source_group( src FILES ${PROJECT_SOURCE_FILES} )
+source_group( src\\win32 FILES ${PROJECT_RC_FILE} )
+
 INCLUDE (FindwxW)
 INCLUDE (UsewxW)
 
 find_package( wxWidgets COMPONENTS core base richtext )
 include(${wxWidgets_USE_FILE})
-
-source_group( src FILES ${PROJECT_SOURCE_FILES} )
 
 include_directories(
 	"${CMAKE_SOURCE_DIR}/src"
