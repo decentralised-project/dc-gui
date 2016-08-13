@@ -69,6 +69,19 @@ class LoginDialog : public wxDialog
 		wxListBox* m_listBox2;
 		wxButton* m_button3;
 		wxPanel* pnlCreate;
+		wxStaticText* m_staticText4;
+		wxStaticText* m_staticText3;
+		wxTextCtrl* txtUsername;
+		wxStaticText* m_staticText5;
+		wxButton* m_button2;
+		wxTextCtrl* txtPublicKey;
+		wxButton* m_button31;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void on_login_click( wxCommandEvent& event ) { event.Skip(); }
+		virtual void on_generate_click( wxCommandEvent& event ) { event.Skip(); }
+		virtual void on_create_click( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

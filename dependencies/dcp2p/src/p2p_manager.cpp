@@ -47,6 +47,12 @@ namespace dcp2p
 			Log(ex.what());
 		}
 	
+		if (hosts.size() == 0)
+		{
+			Log("Not connected, or no peers found.");
+			return;
+		}
+
 		std::string msg("Found ");
 
 		std::stringstream hostsLengthStr;

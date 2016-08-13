@@ -16,6 +16,7 @@
 #include <sstream>
 #include <boost/bind.hpp>
 #include <iostream>
+#include <wx/msgdlg.h>
 
 using namespace boost;
 
@@ -26,6 +27,10 @@ public:
 
 	dc_gui_logindialog(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Login"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(333, 265), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
 	~dc_gui_logindialog();
+
+	void on_generate_click(wxCommandEvent& event);
+	void on_login_click(wxCommandEvent& event);
+	void on_create_click(wxCommandEvent& event);
 
 private:
 };
