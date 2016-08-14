@@ -17,6 +17,7 @@
 #include <boost/bind.hpp>
 #include <iostream>
 #include <wx/msgdlg.h>
+#include "crypt_ec_helper.hpp"
 
 using namespace boost;
 

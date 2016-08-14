@@ -35,6 +35,7 @@ SET(CMAKE_VERBOSE_MAKEFILE TRUE)
 
 find_package( Boost COMPONENTS thread system date_time regex chrono )
 add_subdirectory( dependencies/dcp2p )
+add_subdirectory( dependencies/dccrypto )
 
 SET(PROJECT_LIBRARIES 
 	debug ${Boost_SYSTEM_LIBRARY_DEBUG} optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
@@ -45,6 +46,8 @@ SET(PROJECT_LIBRARIES
 	debug ${Boost_SIGNALS_LIBRARY_DEBUG} optimized ${Boost_SIGNALS_LIBRARY_RELEASE}
 	${WX_richtextd}
 	dcp2p
+	dccrypto
+	${LIB_EAY_RELEASE}
 )
 
 # Set up application resource files for Windows
@@ -67,7 +70,9 @@ include(${wxWidgets_USE_FILE})
 include_directories(
 	"${CMAKE_SOURCE_DIR}/src"
 	"${CMAKE_SOURCE_DIR}/dependencies/dcp2p/include"
+	"${CMAKE_SOURCE_DIR}/dependencies/dccrypto/include"
 	${Boost_INCLUDE_DIR}
+	${OPENSSL_INCLUDE_DIR}
 )
 
 link_directories( 

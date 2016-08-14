@@ -12,7 +12,11 @@ dc_gui_logindialog::~dc_gui_logindialog()
 
 void dc_gui_logindialog::on_generate_click(wxCommandEvent& event)
 {
-
+	dccrypto::crypt_ec_helper ec;
+	EC_KEY* key = ec.generate_key_pair();
+	std::string pub_key = ec.get_public_key(key);
+	ec.save_key_pair("user.pem", key);
+	int i = 0;
 }
 
 void dc_gui_logindialog::on_login_click(wxCommandEvent& event)
