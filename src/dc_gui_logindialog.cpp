@@ -16,7 +16,8 @@ void dc_gui_logindialog::on_generate_click(wxCommandEvent& event)
 	EC_KEY* key = ec.generate_key_pair();
 	std::string pub_key = ec.get_public_key(key);
 	ec.save_key_pair("user.pem", key);
-	int i = 0;
+
+	this->txtPublicKey->SetValue(pub_key);
 }
 
 void dc_gui_logindialog::on_login_click(wxCommandEvent& event)

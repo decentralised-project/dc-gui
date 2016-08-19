@@ -1,6 +1,9 @@
 #ifndef __CRYPT_EC_HELPER_H_INCLUDED__
 #define __CRYPT_EC_HELPER_H_INCLUDED__
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -28,6 +31,10 @@ namespace dccrypto
 		void save_key_pair(std::string path, EC_KEY *keypair);
 
 	private:
+		char* base58(const uint8_t *bytes, size_t len);
+		void reverse(uint8_t *dst, size_t len);
+
+		uint8_t *public_key;
 	};
 }
 

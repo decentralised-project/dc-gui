@@ -172,3 +172,62 @@ LoginDialog::~LoginDialog()
 	m_button31->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_create_click ), NULL, this );
 	
 }
+
+SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	
+	m_notebook2 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel3 = new wxPanel( m_notebook2, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	wxBoxSizer* bSizer10;
+	bSizer10 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer10->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer11;
+	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
+	
+	
+	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText5 = new wxStaticText( m_panel3, wxID_ANY, wxT("Incoming Port"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText5->Wrap( -1 );
+	bSizer11->Add( m_staticText5, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	m_textCtrl4 = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer11->Add( m_textCtrl4, 0, wxALIGN_CENTER|wxALL, 5 );
+	
+	
+	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	bSizer10->Add( bSizer11, 1, wxEXPAND, 5 );
+	
+	
+	bSizer10->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	
+	m_panel3->SetSizer( bSizer10 );
+	m_panel3->Layout();
+	bSizer10->Fit( m_panel3 );
+	m_notebook2->AddPage( m_panel3, wxT("Connection"), false );
+	
+	bSizer9->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
+	
+	m_button4 = new wxButton( this, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer9->Add( m_button4, 0, wxALIGN_RIGHT|wxALL, 5 );
+	
+	
+	this->SetSizer( bSizer9 );
+	this->Layout();
+	
+	this->Centre( wxBOTH );
+}
+
+SettingsDialog::~SettingsDialog()
+{
+}

@@ -90,4 +90,25 @@ class LoginDialog : public wxDialog
 	
 };
 
+///////////////////////////////////////////////////////////////////////////////
+/// Class SettingsDialog
+///////////////////////////////////////////////////////////////////////////////
+class SettingsDialog : public wxDialog 
+{
+	private:
+	
+	protected:
+		wxNotebook* m_notebook2;
+		wxPanel* m_panel3;
+		wxStaticText* m_staticText5;
+		wxTextCtrl* m_textCtrl4;
+		wxButton* m_button4;
+	
+	public:
+		
+		SettingsDialog( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Settings"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 317,228 ), long style = wxDEFAULT_DIALOG_STYLE ); 
+		~SettingsDialog();
+	
+};
+
 #endif //__DC_GUI_FORMS_H__
