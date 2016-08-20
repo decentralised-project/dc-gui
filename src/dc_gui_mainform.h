@@ -55,6 +55,7 @@ private:
 	void OnNodeDisconnected(boost::uuids::uuid remoteId);
 
 	void on_settings_selected(wxCommandEvent& event);
+	void on_form_close(wxCommandEvent& event);
 
 	void writeToRichText(std::string txt);
 };

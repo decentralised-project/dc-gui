@@ -11,6 +11,12 @@ namespace dcp2p
 	{
 		delete _listener;
 
+		for (size_t i = 0; i < _outgoing.size(); i++)
+		{
+			_outgoing[i]->Stop();
+		}
+		_outgoing.clear();
+
 		for (size_t i = 0; i < _threads.size(); i++)
 		{
 			_threads[i]->interrupt();
@@ -32,7 +38,10 @@ namespace dcp2p
 		_threads.push_back(listenerThread);
 
 		// create a vector of dns seeds for the host manager
-		const std::string arr[] = { "dnsseed.uape.co.uk" };
+		const std::string arr[] = { 
+			"dnsseed.decentralised-project.org", 
+			"dnsseed.evil.center" 
+		};
 		std::vector<std::string> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 
 		p2p_host hostManager;
@@ -107,6 +116,8 @@ namespace dcp2p
 		new_connection->ReceivedData.connect(boost::bind(&p2p_manager::on_data_recieved, this, _1, _2));
 		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, this, _1));
 		new_connection->Connect(hosts[chosenIndex].Ip, hosts[chosenIndex].Port);
+
+		_outgoing.push_back(new_connection);
 
 		io.run();
 	}

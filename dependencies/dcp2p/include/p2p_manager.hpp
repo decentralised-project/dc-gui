@@ -15,6 +15,7 @@
 #include "p2p_listener.hpp"
 #include "p2p_host.hpp"
 #include "p2p_packet.hpp"
+#include "p2p_connection.hpp"
 
 namespace dcp2p
 {
@@ -35,7 +36,7 @@ namespace dcp2p
 		p2p_manager();
 		~p2p_manager();
 
-		void Run(int incomingPort);
+		void Run(int incomingPort);		
 
 	private:
 
@@ -43,6 +44,7 @@ namespace dcp2p
 		void outgoing_run(std::vector<p2p_host> hosts);
 
 		std::vector<boost::thread*> _threads;	
+		std::vector<p2p_connection::pointer> _outgoing;
 		p2p_listener* _listener;
 		boost::uuids::uuid _networkId;
 	};

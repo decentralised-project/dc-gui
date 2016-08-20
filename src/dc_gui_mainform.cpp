@@ -7,14 +7,6 @@ dc_gui_mainform::dc_gui_mainform(wxWindow* parent, wxWindowID id, const wxString
 
 dc_gui_mainform::~dc_gui_mainform()
 {
-	if (_manager)
-		delete _manager;
-
-	if (login_dialog)
-		delete login_dialog;
-
-	if (config)
-		delete config;
 }
 
 void dc_gui_mainform::Init()
@@ -121,4 +113,16 @@ void dc_gui_mainform::on_settings_selected(wxCommandEvent& event)
 {
 	settings_dialog = new dc_gui_settingsdialog(config, this);
 	settings_dialog->Show();
+}
+
+void dc_gui_mainform::on_form_close(wxCommandEvent& event)
+{
+	if (_manager)
+		delete _manager;
+
+	if (login_dialog)
+		delete login_dialog;
+
+	if (config)
+		delete config;
 }

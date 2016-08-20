@@ -22,6 +22,12 @@ namespace dcp2p
 			boost::asio::placeholders::error));
 	}
 
+	void p2p_connection::Stop()
+	{
+		socket_.close();
+		_io_service.stop();
+	}
+
 	void p2p_connection::Connect(std::string host, int port)
 	{
 		// outgoing cycle

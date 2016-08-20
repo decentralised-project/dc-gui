@@ -51,6 +51,7 @@ class MainDcForm : public wxFrame
 		wxTextCtrl* txtInput;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void on_form_close( wxCloseEvent& event ) { event.Skip(); }
 		virtual void on_settings_selected( wxCommandEvent& event ) { event.Skip(); }
 		
 	

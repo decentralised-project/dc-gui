@@ -61,12 +61,14 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
 	this->Connect( menuSettings->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
 }
 
 MainDcForm::~MainDcForm()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
 	
 }
