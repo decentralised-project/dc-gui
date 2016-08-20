@@ -33,7 +33,7 @@ set( Boost_USE_MULTITHREADED ON )
 
 SET(CMAKE_VERBOSE_MAKEFILE TRUE)
 
-find_package( Boost COMPONENTS thread system date_time regex chrono )
+find_package( Boost COMPONENTS thread system date_time regex chrono filesystem )
 add_subdirectory( dependencies/dcp2p )
 add_subdirectory( dependencies/dccrypto )
 
@@ -44,6 +44,7 @@ SET(PROJECT_LIBRARIES
 	debug ${Boost_THREAD_LIBRARY_DEBUG} optimized ${Boost_THREAD_LIBRARY_RELEASE}
 	debug ${Boost_CHRONO_LIBRARY_DEBUG} optimized ${Boost_CHRONO_LIBRARY_RELEASE}
 	debug ${Boost_SIGNALS_LIBRARY_DEBUG} optimized ${Boost_SIGNALS_LIBRARY_RELEASE}
+	debug ${Boost_FILESYSTEM_LIBRARY_DEBUG} optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
 	${WX_richtextd}
 	dcp2p
 	dccrypto
@@ -98,3 +99,7 @@ if(MSVC)
     set_target_properties( dcgui PROPERTIES LINK_FLAGS_RELEASE "/SUBSYSTEM:windows")
     set_target_properties( dcgui PROPERTIES LINK_FLAGS_DEBUG "/SUBSYSTEM:windows")
 endif()
+
+add_custom_command(TARGET dcgui POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/deploy $<TARGET_FILE_DIR:dcgui>)

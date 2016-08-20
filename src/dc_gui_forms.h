@@ -29,6 +29,7 @@
 #include <wx/panel.h>
 #include <wx/notebook.h>
 #include <wx/dialog.h>
+#include <wx/filepicker.h>
 
 ///////////////////////////////////////////////////////////////////////////
 
@@ -46,6 +47,10 @@ class MainDcForm : public wxFrame
 		wxRichTextCtrl* txtMain;
 		wxListBox* m_listBox1;
 		wxTextCtrl* txtInput;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void on_settings_selected( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		
@@ -101,8 +106,14 @@ class SettingsDialog : public wxDialog
 		wxNotebook* m_notebook2;
 		wxPanel* m_panel3;
 		wxStaticText* m_staticText5;
-		wxTextCtrl* m_textCtrl4;
+		wxTextCtrl* txtIncomingPort;
+		wxStaticText* m_staticText9;
+		wxDirPickerCtrl* dirData;
 		wxButton* m_button4;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void on_save_clicked( wxCommandEvent& event ) { event.Skip(); }
+		
 	
 	public:
 		

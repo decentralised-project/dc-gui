@@ -20,8 +20,11 @@
 #include "p2p_packet.hpp"
 #include <sstream>
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <iostream>
 #include "dc_gui_logindialog.h"
+#include "dc_gui_settingsdialog.h"
+#include "dc_config.h"
 
 #if WIN32
 #include "Win32/resource.h"
@@ -43,11 +46,15 @@ public:
 private:
 	p2p_manager* _manager;
 	dc_gui_logindialog* login_dialog;
+	dc_gui_settingsdialog* settings_dialog;
+	dc_config* config;
 
 	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId);
 	void OnLog(std::string msg);
 	void OnDataReceived(p2p_connection::pointer connection, p2p_packet packet);
 	void OnNodeDisconnected(boost::uuids::uuid remoteId);
+
+	void on_settings_selected(wxCommandEvent& event);
 
 	void writeToRichText(std::string txt);
 };

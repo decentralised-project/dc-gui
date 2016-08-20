@@ -52,10 +52,16 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Layout();
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	this->Connect( menuSettings->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
 }
 
 MainDcForm::~MainDcForm()
 {
+	// Disconnect Events
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
+	
 }
 
 LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
@@ -188,24 +194,32 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	
 	bSizer10->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	wxBoxSizer* bSizer11;
-	bSizer11 = new wxBoxSizer( wxHORIZONTAL );
-	
-	
-	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+	wxBoxSizer* bSizer16;
+	bSizer16 = new wxBoxSizer( wxHORIZONTAL );
 	
 	m_staticText5 = new wxStaticText( m_panel3, wxID_ANY, wxT("Incoming Port"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText5->Wrap( -1 );
-	bSizer11->Add( m_staticText5, 0, wxALIGN_CENTER|wxALL, 5 );
+	bSizer16->Add( m_staticText5, 3, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	m_textCtrl4 = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer11->Add( m_textCtrl4, 0, wxALIGN_CENTER|wxALL, 5 );
-	
-	
-	bSizer11->Add( 0, 0, 1, wxEXPAND, 5 );
+	txtIncomingPort = new wxTextCtrl( m_panel3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	txtIncomingPort->SetMaxLength( 5 ); 
+	bSizer16->Add( txtIncomingPort, 7, wxALL, 5 );
 	
 	
-	bSizer10->Add( bSizer11, 1, wxEXPAND, 5 );
+	bSizer10->Add( bSizer16, 1, wxEXPAND, 5 );
+	
+	wxBoxSizer* bSizer15;
+	bSizer15 = new wxBoxSizer( wxVERTICAL );
+	
+	m_staticText9 = new wxStaticText( m_panel3, wxID_ANY, wxT("Data Directory"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText9->Wrap( -1 );
+	bSizer15->Add( m_staticText9, 0, wxALL, 5 );
+	
+	dirData = new wxDirPickerCtrl( m_panel3, wxID_ANY, wxEmptyString, wxT("Select a folder"), wxDefaultPosition, wxDefaultSize, wxDIRP_DEFAULT_STYLE );
+	bSizer15->Add( dirData, 0, wxALL|wxEXPAND, 5 );
+	
+	
+	bSizer10->Add( bSizer15, 1, wxEXPAND, 5 );
 	
 	
 	bSizer10->Add( 0, 0, 1, wxEXPAND, 5 );
@@ -214,7 +228,7 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	m_panel3->SetSizer( bSizer10 );
 	m_panel3->Layout();
 	bSizer10->Fit( m_panel3 );
-	m_notebook2->AddPage( m_panel3, wxT("Connection"), false );
+	m_notebook2->AddPage( m_panel3, wxT("General"), false );
 	
 	bSizer9->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
 	
@@ -226,8 +240,14 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	this->Layout();
 	
 	this->Centre( wxBOTH );
+	
+	// Connect Events
+	m_button4->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsDialog::on_save_clicked ), NULL, this );
 }
 
 SettingsDialog::~SettingsDialog()
 {
+	// Disconnect Events
+	m_button4->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SettingsDialog::on_save_clicked ), NULL, this );
+	
 }
