@@ -22,12 +22,12 @@
 #include <wx/richtext/richtextctrl.h>
 #include <wx/listbox.h>
 #include <wx/sizer.h>
+#include <wx/panel.h>
+#include <wx/notebook.h>
 #include <wx/textctrl.h>
 #include <wx/frame.h>
 #include <wx/stattext.h>
 #include <wx/button.h>
-#include <wx/panel.h>
-#include <wx/notebook.h>
 #include <wx/dialog.h>
 #include <wx/filepicker.h>
 
@@ -44,6 +44,8 @@ class MainDcForm : public wxFrame
 	protected:
 		wxMenuBar* m_menubar1;
 		wxMenu* m_menu1;
+		wxNotebook* m_notebook3;
+		wxPanel* m_panel4;
 		wxRichTextCtrl* txtMain;
 		wxListBox* m_listBox1;
 		wxTextCtrl* txtInput;

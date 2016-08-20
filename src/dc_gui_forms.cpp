@@ -32,17 +32,24 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
+	m_notebook3 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel4 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
-	txtMain = new wxRichTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_AUTO_URL|wxTE_READONLY|wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS );
+	txtMain = new wxRichTextCtrl( m_panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_AUTO_URL|wxTE_READONLY|wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS );
 	bSizer2->Add( txtMain, 1, wxEXPAND | wxALL, 1 );
 	
-	m_listBox1 = new wxListBox( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0|wxNO_BORDER ); 
+	m_listBox1 = new wxListBox( m_panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0|wxNO_BORDER ); 
 	bSizer2->Add( m_listBox1, 0, wxALL|wxEXPAND, 1 );
 	
 	
-	bSizer1->Add( bSizer2, 1, wxEXPAND, 5 );
+	m_panel4->SetSizer( bSizer2 );
+	m_panel4->Layout();
+	bSizer2->Fit( m_panel4 );
+	m_notebook3->AddPage( m_panel4, wxT("Terminal"), false );
+	
+	bSizer1->Add( m_notebook3, 1, wxEXPAND | wxALL, 0 );
 	
 	txtInput = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer1->Add( txtInput, 0, wxALL|wxEXPAND, 0 );
