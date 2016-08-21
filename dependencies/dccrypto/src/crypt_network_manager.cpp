@@ -2,7 +2,7 @@
 
 namespace dccrypto
 {
-	crypt_network_manager::crypt_network_manager()
+	crypt_network_manager::crypt_network_manager(std::string dataDirPath)
 	{
 	}
 }

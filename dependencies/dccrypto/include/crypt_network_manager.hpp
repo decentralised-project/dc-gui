@@ -24,18 +24,18 @@
 
 namespace dccrypto
 {
-	class crypt_network_manager : public dcp2p::p2p_manager, public boost::enable_shared_from_this<crypt_network_manager>
+	class crypt_network_manager : public boost::enable_shared_from_this<crypt_network_manager>
 	{
 	public:
 		typedef boost::shared_ptr<crypt_network_manager> pointer;
 
-		static pointer Create()
+		static pointer Create(std::string dataDirPath)
 		{
-			return pointer(new crypt_network_manager());
+			return pointer(new crypt_network_manager(dataDirPath));
 		}
 
 	private:
-		crypt_network_manager();
+		crypt_network_manager(std::string dataDirPath);
 	};
 }
 
