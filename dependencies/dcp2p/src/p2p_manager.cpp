@@ -2,18 +2,17 @@
 
 namespace dcp2p
 {
-	p2p_manager::p2p_manager()
+	p2p_manager::p2p_manager(std::string dataDirPath) : data_dir(dataDirPath)
 	{
-
 	}
 
-	p2p_manager::~p2p_manager()
+	void p2p_manager::Shutdown()
 	{
-		delete _listener;
+		_listener->Shutdown();
 
 		for (size_t i = 0; i < _outgoing.size(); i++)
 		{
-			_outgoing[i]->Stop();
+			_outgoing[i]->Shutdown();
 		}
 		_outgoing.clear();
 
@@ -21,7 +20,6 @@ namespace dcp2p
 		{
 			_threads[i]->interrupt();
 			_threads[i]->join();
-			delete _threads[i];
 		}
 	}
 
@@ -34,7 +32,7 @@ namespace dcp2p
 		Log(ss.str());
 
 		// first, start the listener thread
-		boost::thread* listenerThread = new boost::thread(&p2p_manager::listener_run, this, incomingPort);
+		boost::shared_ptr<boost::thread> listenerThread = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::listener_run, this, incomingPort));
 		_threads.push_back(listenerThread);
 
 		// create a vector of dns seeds for the host manager
@@ -44,42 +42,26 @@ namespace dcp2p
 		};
 		std::vector<std::string> vec(arr, arr + sizeof(arr) / sizeof(arr[0]));
 
-		p2p_host hostManager;
-		std::vector<p2p_host> hosts;
+		std::string hosts_path = std::string(data_dir.c_str());
+		hosts_path.append("hosts.json");
+		_host_manager = p2p_hostmanager::Create(hosts_path, vec, 6453); // default port, not incoming
 
-		try
-		{
-			// 6453 is the default port
-			hosts = hostManager.LoadAll("hosts", vec, 6453);
-		}
-		catch (std::exception const &ex) {
-			Log(ex.what());
-		}
-	
-		if (hosts.size() == 0)
-		{
-			Log("Not connected, or no peers found.");
-			return;
-		}
+		//for (int i = 0; i < 5; ++i)
+		//{
+		
+			boost::shared_ptr<boost::thread> workerA = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::outgoing_run, this));
+			_threads.push_back(workerA);
 
-		std::string msg("Found ");
-
-		std::stringstream hostsLengthStr;
-		hostsLengthStr << hosts.size();
-		msg.append(hostsLengthStr.str());
-
-		msg.append(" known peers from hosts file");
-		Log(msg);
-
-		boost::thread* workerA = new boost::thread(&p2p_manager::outgoing_run, this, hosts);
-		_threads.push_back(workerA);
+			//boost::thread* workerB = new boost::thread(&p2p_manager::outgoing_run, this);
+			//_threads.push_back(workerB);
+		//}
 	}
 
 	void p2p_manager::listener_run(int incomingPort)
 	{
 		boost::asio::io_service io;
-		_listener = new p2p_listener(io, incomingPort, _networkId);
-		_listener->ListenForIncoming(this);
+		_listener = p2p_listener::Create(io, incomingPort, _networkId);
+		_listener->ListenForIncoming(shared_from_this());
 
 		std::string msg = "Listening on port ";
 
@@ -92,19 +74,24 @@ namespace dcp2p
 		io.run();
 	}
 
-	void p2p_manager::outgoing_run(std::vector<p2p_host> hosts)
+	void p2p_manager::outgoing_run()
 	{
 		boost::asio::io_service io;
 
-		int chosenIndex = rand() % hosts.size();
+		p2p_host chosen = _host_manager->GetNextHost();
+		if (chosen.IsEmpty())
+		{
+			Log("Hosts are exhausted. Thread exiting.");
+			return;
+		}
 
 		std::string msg;
 		msg.append("Connecting to ");
-		msg.append(hosts[chosenIndex].Ip);
+		msg.append(chosen.GetIp());
 		msg.append(":");
 
 		std::stringstream ss;
-		ss << hosts[chosenIndex].Port;
+		ss << chosen.GetPort();
 		msg.append(ss.str());
 
 		Log(msg);
@@ -115,7 +102,7 @@ namespace dcp2p
 		new_connection->NodeConnected.connect(boost::bind(&p2p_manager::on_node_connected, this, _1, _2, _3));
 		new_connection->ReceivedData.connect(boost::bind(&p2p_manager::on_data_recieved, this, _1, _2));
 		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, this, _1));
-		new_connection->Connect(hosts[chosenIndex].Ip, hosts[chosenIndex].Port);
+		new_connection->Connect(chosen.GetIp(), chosen.GetPort());
 
 		_outgoing.push_back(new_connection);
 

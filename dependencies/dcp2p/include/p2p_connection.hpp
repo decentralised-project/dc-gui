@@ -40,7 +40,7 @@ namespace dcp2p
 
 		void Start();
 		void Connect(std::string host, int port);
-		void Stop();
+		void Shutdown();
 
 		void Send(p2p_packet packet);
 		void Send(char* data, size_t length);

@@ -12,16 +12,23 @@ namespace dcp2p
 	class p2p_host
 	{
 	public:
-		std::string Ip;
-		int Port;
-
 		p2p_host();
+		p2p_host(std::string ip, int port, int rating);
 		~p2p_host();
 
-		std::vector<p2p_host> LoadAll(std::string filePath, 
-									  std::vector<std::string> dnsSeeds, 
-									  int defaultPort);
+		void set(std::string ip, int port, int rating);
 
+		bool IsEmpty();
+		std::string GetIp();
+		int GetPort();
+		int GetRating();
+
+	private:
+
+		bool _isEmpty;
+		std::string _ip;
+		int _port;
+		int _rating;
 	};
 }
 

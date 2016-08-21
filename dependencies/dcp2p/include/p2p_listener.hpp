@@ -22,23 +22,28 @@ namespace dcp2p
 {
 	class p2p_manager;
 
-	class p2p_listener
+	class p2p_listener : public boost::enable_shared_from_this<p2p_listener>
 	{
 	public:
-		p2p_listener(boost::asio::io_service &io_service, int incomingPort, boost::uuids::uuid &localId);
-		~p2p_listener();
+		typedef boost::shared_ptr<p2p_listener> pointer;
 
-		void ListenForIncoming(p2p_manager* manager);
+		static pointer Create(boost::asio::io_service &io_service, int incomingPort, boost::uuids::uuid &localId)
+		{
+			return pointer(new p2p_listener(io_service, incomingPort, localId));
+		}
+
+		void ListenForIncoming(boost::shared_ptr<p2p_manager> manager);
+		void Shutdown();
 
 	private:
+		p2p_listener(boost::asio::io_service &io_service, int incomingPort, boost::uuids::uuid &localId);
 
 		void handle_accept(p2p_connection::pointer new_connection, const boost::system::error_code& error);
 
-		std::vector<boost::thread*> _listenerThreads;
 		boost::asio::io_service &_io_service;
 		tcp::acceptor acceptor_;
 		boost::uuids::uuid &_localId;
-		p2p_manager *manager_;
+		boost::shared_ptr<p2p_manager> manager_;
 	};
 }
 

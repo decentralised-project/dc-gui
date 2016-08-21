@@ -1,6 +1,6 @@
 #include "dc_gui_settingsdialog.h"
 
-dc_gui_settingsdialog::dc_gui_settingsdialog(dc_config* c, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
+dc_gui_settingsdialog::dc_gui_settingsdialog(dc_config::pointer c, wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style)
 	: SettingsDialog(parent, id, title, pos, size, style)
 {
 	this->SetWindowStyle(wxCLOSE_BOX | wxCAPTION);
@@ -16,10 +16,6 @@ dc_gui_settingsdialog::dc_gui_settingsdialog(dc_config* c, wxWindow* parent, wxW
 	txtIncomingPort->SetValue(incoming_port);
 
 	dirData->SetPath(c->GetString("data_dir"));
-}
-
-dc_gui_settingsdialog::~dc_gui_settingsdialog()
-{
 }
 
 void dc_gui_settingsdialog::on_save_clicked(wxCommandEvent& event)

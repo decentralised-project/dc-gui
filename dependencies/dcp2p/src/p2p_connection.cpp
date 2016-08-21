@@ -22,9 +22,10 @@ namespace dcp2p
 			boost::asio::placeholders::error));
 	}
 
-	void p2p_connection::Stop()
+	void p2p_connection::Shutdown()
 	{
-		socket_.close();
+		socket_.cancel();
+		socket_.shutdown(boost::asio::socket_base::shutdown_type::shutdown_both);
 		_io_service.stop();
 	}
 

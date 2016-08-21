@@ -8,12 +8,12 @@ namespace dcp2p
 	{
 	}
 
-	p2p_listener::~p2p_listener() 		
+	void p2p_listener::Shutdown()
 	{
 		_io_service.stop();
 	}
 
-	void p2p_listener::ListenForIncoming(p2p_manager* manager)
+	void p2p_listener::ListenForIncoming(boost::shared_ptr<p2p_manager> manager)
 	{
 		manager_ = manager;
 

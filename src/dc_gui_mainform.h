@@ -21,6 +21,8 @@
 #include <sstream>
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/enable_shared_from_this.hpp>
 #include <iostream>
 #include "dc_gui_logindialog.h"
 #include "dc_gui_settingsdialog.h"
@@ -35,7 +37,6 @@ using namespace dcp2p;
 
 class dc_gui_mainform : public MainDcForm
 {
-
 public:
 
 	dc_gui_mainform(wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Decentralised GUI"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(586, 461), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);
@@ -44,10 +45,10 @@ public:
 	void Init();
 
 private:
-	p2p_manager* _manager;
-	dc_gui_logindialog* login_dialog;
-	dc_gui_settingsdialog* settings_dialog;
-	dc_config* config;
+	p2p_manager::pointer _manager;
+	dc_gui_logindialog::pointer login_dialog;
+	dc_gui_settingsdialog::pointer settings_dialog;
+	dc_config::pointer config;
 
 	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId);
 	void OnLog(std::string msg);

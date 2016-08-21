@@ -4,41 +4,44 @@ namespace dcp2p
 {
 	p2p_host::p2p_host()
 	{
+		_isEmpty = true;
+	}
 
+	p2p_host::p2p_host(std::string ip, int port, int rating)
+	{
+		set(ip, port, rating);
 	}
 
 	p2p_host::~p2p_host()
 	{
-
 	}
 
-	std::vector<p2p_host> p2p_host::LoadAll(std::string filePath,
-		std::vector<std::string> dnsSeeds,
-		int defaultPort)
+	void p2p_host::set(std::string ip, int port, int rating)
 	{
-		std::vector<p2p_host> hosts;
+		_isEmpty = false;
 
-		// TODO: file
+		_ip = ip;
+		_port = port;
+		_rating = rating;
+	}
 
-		for (std::vector<std::string>::iterator it = dnsSeeds.begin(); it != dnsSeeds.end(); ++it) {
+	std::string p2p_host::GetIp()
+	{
+		return _ip;
+	}
 
-			boost::asio::io_service io_service;
-			boost::asio::ip::tcp::resolver resolver(io_service);
-			boost::asio::ip::tcp::resolver::query query(it->c_str(), "");
-			for (boost::asio::ip::tcp::resolver::iterator i = resolver.resolve(query);
-				i != boost::asio::ip::tcp::resolver::iterator();
-				++i)
-			{
-				p2p_host host;
+	int p2p_host::GetPort()
+	{
+		return _port;
+	}
 
-				boost::asio::ip::tcp::endpoint end = *i;
-				host.Ip = end.address().to_string();
-				host.Port = defaultPort;
+	int p2p_host::GetRating()
+	{
+		return _rating;
+	}
 
-				hosts.push_back(host);
-			}
-		}
-
-		return hosts;
+	bool p2p_host::IsEmpty()
+	{
+		return _isEmpty;
 	}
 }

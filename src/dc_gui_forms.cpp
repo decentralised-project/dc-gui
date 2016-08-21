@@ -121,6 +121,7 @@ LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title
 	fgSizer1->Add( m_staticText3, 1, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	txtUsername = new wxTextCtrl( pnlCreate, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	txtUsername->SetMaxLength( 20 ); 
 	fgSizer1->Add( txtUsername, 9, wxALL|wxEXPAND, 5 );
 	
 	
