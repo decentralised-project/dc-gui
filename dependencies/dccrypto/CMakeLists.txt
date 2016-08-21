@@ -23,7 +23,7 @@ set  ( ROOT_SRC
 source_group( "include" FILES ${ROOT_HEADERS} )
 source_group( "src" FILES ${ROOT_SRC} )
 
-include_directories( ${ROOT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} )
+include_directories( ${ROOT_INCLUDE_DIR} ${Boost_INCLUDE_DIRS} ${OPENSSL_INCLUDE_DIR} "${CMAKE_SOURCE_DIR}/dependencies/dcp2p/include" )
 
 link_directories( 
 	${Boost_LIBRARY_DIRS}
