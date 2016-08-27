@@ -27,6 +27,7 @@
 #include "dc_gui_logindialog.h"
 #include "dc_gui_settingsdialog.h"
 #include "dc_config.h"
+#include "crypt_network_manager.hpp"
 
 #if WIN32
 #include "Win32/resource.h"
@@ -34,6 +35,7 @@
 
 using namespace boost;
 using namespace dcp2p;
+using namespace dccrypto;
 
 class dc_gui_mainform : public MainDcForm
 {
@@ -45,7 +47,7 @@ public:
 	void Init();
 
 private:
-	p2p_manager::pointer _manager;
+	crypt_network_manager::pointer _manager;
 	dc_gui_logindialog::pointer login_dialog;
 	dc_gui_settingsdialog::pointer settings_dialog;
 	dc_config::pointer config;

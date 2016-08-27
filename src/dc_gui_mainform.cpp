@@ -38,7 +38,7 @@ void dc_gui_mainform::Init()
 	login_dialog = dc_gui_logindialog::Create(data_dir, this);
 	login_dialog->Show();
 
-	_manager = p2p_manager::Create(data_dir);
+	_manager = crypt_network_manager::Create(data_dir);
 	_manager->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));
 	_manager->NodeConnected.connect(boost::bind(&dc_gui_mainform::OnNodeConnected, this, _1, _2, _3));
 	_manager->DataReceived.connect(boost::bind(&dc_gui_mainform::OnDataReceived, this, _1, _2));

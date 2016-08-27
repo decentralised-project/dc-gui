@@ -21,6 +21,8 @@
 #include <boost/enable_shared_from_this.hpp>
 
 #include "p2p_manager.hpp"
+#include "p2p_connection.hpp"
+#include "p2p_packet.hpp"
 
 namespace dccrypto
 {
@@ -34,8 +36,24 @@ namespace dccrypto
 			return pointer(new crypt_network_manager(dataDirPath));
 		}
 
+		boost::signals2::signal<void(std::string)>													Log;
+		boost::signals2::signal<void(bool, dcp2p::p2p_connection::pointer, boost::uuids::uuid)>		NodeConnected;
+		boost::signals2::signal<void(dcp2p::p2p_connection::pointer, dcp2p::p2p_packet)>			DataReceived;
+		boost::signals2::signal<void(boost::uuids::uuid)>											NodeDisconnected;
+
+		void Run(int incomingPort);
+		void Shutdown();
+
 	private:
 		crypt_network_manager(std::string dataDirPath);
+
+		void on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, boost::uuids::uuid remoteId);
+		void on_log_recieved(std::string msg);
+		void on_data_recieved(dcp2p::p2p_connection::pointer connection, dcp2p::p2p_packet packet);
+		void on_node_disconnected(boost::uuids::uuid remoteId);
+
+		dcp2p::p2p_manager::pointer manager;
+		std::string data_path;
 	};
 }
 
