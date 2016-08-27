@@ -58,6 +58,7 @@ namespace dcp2p
 		packet_queue write_queue_;
 		std::string &_localId;
 		std::string _remoteId;
+		bool isIncoming_;
 	};
 }
 

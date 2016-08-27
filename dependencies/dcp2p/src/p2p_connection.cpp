@@ -6,6 +6,7 @@ namespace dcp2p
 		: _io_service(io_service), socket_(io_service), _localId(localId)
 	{
 		_remoteId = "";
+		isIncoming_ = false;
 	}
 
 	tcp::socket& p2p_connection::Socket()
@@ -15,6 +16,8 @@ namespace dcp2p
 
 	void p2p_connection::Start()
 	{
+		isIncoming_ = true;
+
 		// incoming cycle
 		boost::asio::async_read(socket_,
 			boost::asio::buffer(packet_.data(), p2p_packet::header_length),
@@ -116,7 +119,8 @@ namespace dcp2p
 					std::stringstream id_stream;
 					id_stream << _localId;
 
-					Send(std::string(id_stream.str()));
+					if (isIncoming_)
+						Send(std::string(id_stream.str()));
 				}
 				else
 				{
@@ -125,6 +129,7 @@ namespace dcp2p
 					Log(std::string(ss.str()));
 
 					socket_.close();
+					return;
 				}
 			}
 			else
