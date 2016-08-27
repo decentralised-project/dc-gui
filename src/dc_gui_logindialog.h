@@ -34,11 +34,14 @@ public:
 	typedef boost::shared_ptr<dc_gui_logindialog> pointer;
 
 	boost::signals2::signal<void(std::string)> Login;
+	boost::signals2::signal<void(std::string)> Log;
 
 	static pointer Create(std::string dataDirPath, wxWindow* parent)
 	{
 		return pointer(new dc_gui_logindialog(dataDirPath, parent));
 	}
+
+	void LoadUsers();
 
 private:
 	dc_gui_logindialog(std::string dataDirPath, wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("Login"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(333, 265), long style = wxDEFAULT_FRAME_STYLE | wxTAB_TRAVERSAL);

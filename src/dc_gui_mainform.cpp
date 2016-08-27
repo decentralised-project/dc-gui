@@ -45,6 +45,8 @@ void dc_gui_mainform::Init()
 
 	login_dialog = dc_gui_logindialog::Create(data_dir, this);
 	login_dialog->Login.connect(boost::bind(&dc_gui_mainform::OnLoginClicked, this, _1));
+	login_dialog->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));
+	login_dialog->LoadUsers();
 	login_dialog->Show();
 }
 
@@ -136,6 +138,8 @@ void dc_gui_mainform::on_login_selected(wxCommandEvent& event)
 
 	login_dialog = dc_gui_logindialog::Create(data_dir, this);
 	login_dialog->Login.connect(boost::bind(&dc_gui_mainform::OnLoginClicked, this, _1));
+	login_dialog->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));
+	login_dialog->LoadUsers();
 	login_dialog->Show();
 }
 

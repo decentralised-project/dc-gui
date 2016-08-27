@@ -6,8 +6,6 @@ dc_gui_logindialog::dc_gui_logindialog(std::string dataDirPath, wxWindow* parent
 	this->SetWindowStyle(wxCLOSE_BOX | wxCAPTION);
 	data_dir = dataDirPath;
 	ec = dccrypto::crypt_ec_helper::Create();
-
-	getFilenamesInDirectory(dataDirPath.append("private_keys"));
 }
 
 void dc_gui_logindialog::on_generate_click(wxCommandEvent& event)
@@ -68,6 +66,18 @@ void dc_gui_logindialog::on_create_click(wxCommandEvent& event)
 void dc_gui_logindialog::on_user_selected(wxCommandEvent& event)
 {
 	btnLogin->Enable(true);
+}
+
+void dc_gui_logindialog::LoadUsers()
+{
+	try
+	{
+		getFilenamesInDirectory(std::string(data_dir).append("private_keys"));
+	}
+	catch (std::exception ex)
+	{
+		Log(ex.what());
+	}
 }
 
 void dc_gui_logindialog::getFilenamesInDirectory(std::string dir_path)
