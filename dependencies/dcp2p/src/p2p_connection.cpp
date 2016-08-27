@@ -5,6 +5,7 @@ namespace dcp2p
 	p2p_connection::p2p_connection(boost::asio::io_service& io_service, std::string &localId)
 		: _io_service(io_service), socket_(io_service), _localId(localId)
 	{
+		_remoteId = "";
 	}
 
 	tcp::socket& p2p_connection::Socket()
@@ -50,7 +51,7 @@ namespace dcp2p
 		}
 
 		std::stringstream id_stream;
-		id_stream << "IDNT" << _localId;
+		id_stream << _localId;
 
 		Send(std::string(id_stream.str()));
 		boost::asio::async_write(socket_,
@@ -104,16 +105,16 @@ namespace dcp2p
 		if (!error)
 		{
 			std::string body(packet_.body(), packet_.body() + packet_.body_length());
-			std::string typeCode = body.substr(0, 4);
-			if (typeCode == "IDNT")
+
+			if (_remoteId == "")
 			{
-				_remoteId = body.substr(4, packet_.body_length() - 4);
+				_remoteId = body.substr(0, packet_.body_length());
 				if (_localId != _remoteId)
 				{
 					NodeConnected(true, shared_from_this(), _remoteId);
 
 					std::stringstream id_stream;
-					id_stream << "IDOK" << _localId;
+					id_stream << _localId;
 
 					Send(std::string(id_stream.str()));
 				}
@@ -126,35 +127,20 @@ namespace dcp2p
 					socket_.close();
 				}
 			}
-			else if (typeCode == "PING")
-			{
-				if (write_queue_.empty())
-					Send(std::string("PONG"));
-			}
-			else if (typeCode == "PONG")
-			{
-				// do nothing
-			}
-			else if (typeCode == "IDOK")
-			{
-				_remoteId = body.substr(4, packet_.body_length() - 4);
-
-				NodeConnected(false, shared_from_this(), _remoteId);
-			}
 			else
 				ReceivedData(shared_from_this(), packet_);
 
 			if (write_queue_.empty())
 			{
 				boost::this_thread::sleep(boost::posix_time::milliseconds(3000));
-				Send(std::string("PING"));
+				//Send(std::string("PING")); TODO
 			}
-
-			boost::asio::async_write(socket_,
- 									 boost::asio::buffer(write_queue_.front().data(),
-									 write_queue_.front().length()),
-									 boost::bind(&p2p_connection::handle_write, shared_from_this(),
-									 boost::asio::placeholders::error));
+			else
+				boost::asio::async_write(socket_,
+ 										 boost::asio::buffer(write_queue_.front().data(),
+										 write_queue_.front().length()),
+										 boost::bind(&p2p_connection::handle_write, shared_from_this(),
+										 boost::asio::placeholders::error));
 		}
 		else
 		{

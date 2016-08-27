@@ -36,7 +36,7 @@ namespace dccrypto
 
 	void crypt_network_manager::on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, std::string remoteId)
 	{
-		Log("node connected was fired");
+		Log(std::string("Node connected: ").append(remoteId));
 
 		NodeConnected(isIncoming, connection, remoteId);
 	}
