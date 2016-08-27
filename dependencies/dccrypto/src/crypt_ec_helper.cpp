@@ -1,4 +1,4 @@
-#include "crypt_ec_helper.hpp"
+﻿#include "crypt_ec_helper.hpp"
 
 namespace dccrypto
 {
@@ -85,8 +85,58 @@ namespace dccrypto
 		BIO_free_all(out);
 	}
 
+	EC_KEY* crypt_ec_helper::load_key_pair(std::string path)
+	{
+		BIO *in;
+		int i;
+		FILE* infile;
+		EVP_PKEY *pkey = NULL;
+
+		ERR_load_BIO_strings();
+		ERR_load_crypto_strings();
+
+		pkey = EVP_PKEY_new();
+
+		EC_GROUP *ecgroup = EC_GROUP_new_by_curve_name(NID_secp256k1);
+
+		infile = fopen(path.c_str(), "r");
+
+		in = BIO_new(BIO_s_file());
+		in = BIO_new_fp(infile, BIO_NOCLOSE);
+
+		PEM_read_bio_PrivateKey(in, &pkey, NULL, NULL);
+
+		fclose(infile);
+
+		eckey = EVP_PKEY_get1_EC_KEY(pkey);
+
+		EVP_PKEY_free(pkey);
+		BIO_free_all(in);
+
+		return eckey;
+	}
+
+	int ecdh(unsigned char **secret, EC_KEY *key, const EC_POINT *pPub)
+	{
+		int secretLen;
+
+		secretLen = EC_GROUP_get_degree(EC_KEY_get0_group(key));
+		secretLen = (secretLen + 7) / 8;
+
+		*secret = (unsigned char*)malloc(secretLen);
+		if (!(*secret))
+		{
+			fflush(stderr);
+			free(*secret);
+			throw std::runtime_error("Failed to allocate memory for secret.\n");
+		}
+		secretLen = ECDH_compute_key(*secret, secretLen, pPub, key, NULL);
+
+		return secretLen;
+	}
+
 	// Credit: https://github.com/keeshux
-	// Based on code from https://github.com/keeshux/basic-blockchain-programming/blob/master/base58.h
+	// ↓↓↓↓ Based on code from https://github.com/keeshux/basic-blockchain-programming/blob/master/base58.h
 
 	static const char base58_alphabet[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 

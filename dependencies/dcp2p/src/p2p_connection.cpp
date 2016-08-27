@@ -2,7 +2,7 @@
 
 namespace dcp2p
 {
-	p2p_connection::p2p_connection(boost::asio::io_service& io_service, boost::uuids::uuid &localId) 
+	p2p_connection::p2p_connection(boost::asio::io_service& io_service, std::string &localId)
 		: _io_service(io_service), socket_(io_service), _localId(localId)
 	{
 	}
@@ -107,9 +107,8 @@ namespace dcp2p
 			std::string typeCode = body.substr(0, 4);
 			if (typeCode == "IDNT")
 			{
-				boost::uuids::string_generator str_gen;
-				_remoteId = str_gen(body.substr(4, packet_.body_length() - 4));
-				if (boost::uuids::to_string(_localId) != boost::uuids::to_string(_remoteId))
+				_remoteId = body.substr(4, packet_.body_length() - 4);
+				if (_localId != _remoteId)
 				{
 					NodeConnected(true, shared_from_this(), _remoteId);
 
@@ -138,8 +137,7 @@ namespace dcp2p
 			}
 			else if (typeCode == "IDOK")
 			{
-				boost::uuids::string_generator str_gen;
-				_remoteId = str_gen(body.substr(4, packet_.body_length() - 4));
+				_remoteId = body.substr(4, packet_.body_length() - 4);
 
 				NodeConnected(false, shared_from_this(), _remoteId);
 			}

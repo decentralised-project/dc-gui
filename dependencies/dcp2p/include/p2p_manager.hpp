@@ -6,9 +6,6 @@
 #include <boost/thread.hpp> 
 #include <boost/signals2/signal.hpp>
 #include <boost/bind.hpp>
-#include <boost/uuid/uuid.hpp>            
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>        
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <string>
@@ -33,16 +30,16 @@ namespace dcp2p
 		}
 
 		boost::signals2::signal<void(std::string)>											Log;
-		boost::signals2::signal<void(bool, p2p_connection::pointer, boost::uuids::uuid)>	NodeConnected;
+		boost::signals2::signal<void(bool, p2p_connection::pointer, std::string)>			NodeConnected;
 		boost::signals2::signal<void(p2p_connection::pointer, p2p_packet)>					DataReceived;
-		boost::signals2::signal<void(boost::uuids::uuid)>									NodeDisconnected;
+		boost::signals2::signal<void(std::string)>											NodeDisconnected;
 
-		void on_node_connected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId);
+		void on_node_connected(bool isIncoming, p2p_connection::pointer connection, std::string remoteId);
 		void on_log_recieved(std::string msg);
 		void on_data_recieved(p2p_connection::pointer connection, p2p_packet packet);
-		void on_node_disconnected(boost::uuids::uuid remoteId);
+		void on_node_disconnected(std::string remoteId);
 
-		void Run(int incomingPort);		
+		void Run(int incomingPort, std::string uniqueSessionId);		
 		void Shutdown();
 
 	private:
@@ -55,8 +52,8 @@ namespace dcp2p
 		std::vector<p2p_connection::pointer> _outgoing;
 		p2p_listener::pointer _listener;
 		p2p_hostmanager::pointer _host_manager;
-		boost::uuids::uuid _networkId;
-		std::string &data_dir;
+		std::string _networkId;
+		std::string data_dir;
 	};
 }
 

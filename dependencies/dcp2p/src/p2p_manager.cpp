@@ -2,8 +2,9 @@
 
 namespace dcp2p
 {
-	p2p_manager::p2p_manager(std::string dataDirPath) : data_dir(dataDirPath)
+	p2p_manager::p2p_manager(std::string dataDirPath)
 	{
+		data_dir = dataDirPath;
 	}
 
 	void p2p_manager::Shutdown()
@@ -23,13 +24,9 @@ namespace dcp2p
 		}
 	}
 
-	void p2p_manager::Run(int incomingPort)
+	void p2p_manager::Run(int incomingPort, std::string uniqueSessionId)
 	{
-		_networkId = boost::uuids::random_generator()();
-
-		std::stringstream ss;
-		ss << "Network Id for this session is " << _networkId;
-		Log(ss.str());
+		_networkId = uniqueSessionId;
 
 		// first, start the listener thread
 		boost::shared_ptr<boost::thread> listenerThread = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::listener_run, this, incomingPort));
@@ -109,7 +106,7 @@ namespace dcp2p
 		io.run();
 	}
 
-	void p2p_manager::on_node_connected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId)
+	void p2p_manager::on_node_connected(bool isIncoming, p2p_connection::pointer connection, std::string remoteId)
 	{
 		NodeConnected(isIncoming, connection, remoteId);
 	}
@@ -124,7 +121,7 @@ namespace dcp2p
 		DataReceived(connection, packet);
 	}
 
-	void p2p_manager::on_node_disconnected(boost::uuids::uuid remoteId)
+	void p2p_manager::on_node_disconnected(std::string remoteId)
 	{
 		NodeDisconnected(remoteId);
 	}

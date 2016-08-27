@@ -15,6 +15,10 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	m_menubar1 = new wxMenuBar( 0 );
 	m_menu1 = new wxMenu();
+	wxMenuItem* menuLogin;
+	menuLogin = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Login") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu1->Append( menuLogin );
+	
 	wxMenuItem* menuSettings;
 	menuSettings = new wxMenuItem( m_menu1, wxID_ANY, wxString( wxT("Settings") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu1->Append( menuSettings );
@@ -62,6 +66,7 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
+	this->Connect( menuLogin->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_login_selected ) );
 	this->Connect( menuSettings->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
 }
 
@@ -69,6 +74,7 @@ MainDcForm::~MainDcForm()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_login_selected ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
 	
 }
@@ -89,13 +95,13 @@ LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title
 	m_staticText2->Wrap( -1 );
 	bSizer5->Add( m_staticText2, 1, wxALL, 10 );
 	
-	m_listBox2 = new wxListBox( pnlExisting, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
-	bSizer5->Add( m_listBox2, 8, wxALL|wxEXPAND, 10 );
+	lstExistingUsers = new wxListBox( pnlExisting, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0 ); 
+	bSizer5->Add( lstExistingUsers, 8, wxALL|wxEXPAND, 10 );
 	
-	m_button3 = new wxButton( pnlExisting, wxID_ANY, wxT("Login"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_button3->Enable( false );
+	btnLogin = new wxButton( pnlExisting, wxID_ANY, wxT("Login"), wxDefaultPosition, wxDefaultSize, 0 );
+	btnLogin->Enable( false );
 	
-	bSizer5->Add( m_button3, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 10 );
+	bSizer5->Add( btnLogin, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 10 );
 	
 	
 	pnlExisting->SetSizer( bSizer5 );
@@ -175,7 +181,8 @@ LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title
 	this->Centre( wxBOTH );
 	
 	// Connect Events
-	m_button3->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_login_click ), NULL, this );
+	lstExistingUsers->Connect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( LoginDialog::on_user_selected ), NULL, this );
+	btnLogin->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_login_click ), NULL, this );
 	m_button2->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_generate_click ), NULL, this );
 	m_button31->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_create_click ), NULL, this );
 }
@@ -183,7 +190,8 @@ LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title
 LoginDialog::~LoginDialog()
 {
 	// Disconnect Events
-	m_button3->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_login_click ), NULL, this );
+	lstExistingUsers->Disconnect( wxEVT_COMMAND_LISTBOX_SELECTED, wxCommandEventHandler( LoginDialog::on_user_selected ), NULL, this );
+	btnLogin->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_login_click ), NULL, this );
 	m_button2->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_generate_click ), NULL, this );
 	m_button31->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LoginDialog::on_create_click ), NULL, this );
 	

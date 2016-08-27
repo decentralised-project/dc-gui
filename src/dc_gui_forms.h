@@ -52,6 +52,7 @@ class MainDcForm : public wxFrame
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void on_form_close( wxCloseEvent& event ) { event.Skip(); }
+		virtual void on_login_selected( wxCommandEvent& event ) { event.Skip(); }
 		virtual void on_settings_selected( wxCommandEvent& event ) { event.Skip(); }
 		
 	
@@ -74,8 +75,8 @@ class LoginDialog : public wxDialog
 		wxNotebook* tabsLogin;
 		wxPanel* pnlExisting;
 		wxStaticText* m_staticText2;
-		wxListBox* m_listBox2;
-		wxButton* m_button3;
+		wxListBox* lstExistingUsers;
+		wxButton* btnLogin;
 		wxPanel* pnlCreate;
 		wxStaticText* m_staticText4;
 		wxStaticText* m_staticText3;
@@ -86,6 +87,7 @@ class LoginDialog : public wxDialog
 		wxButton* m_button31;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void on_user_selected( wxCommandEvent& event ) { event.Skip(); }
 		virtual void on_login_click( wxCommandEvent& event ) { event.Skip(); }
 		virtual void on_generate_click( wxCommandEvent& event ) { event.Skip(); }
 		virtual void on_create_click( wxCommandEvent& event ) { event.Skip(); }

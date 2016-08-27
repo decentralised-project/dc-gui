@@ -10,9 +10,6 @@
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include <boost/signals2/signal.hpp>
-#include <boost/uuid/uuid.hpp>            
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>        
 #include "p2p_packet.hpp"
 
 using namespace boost::asio::ip;
@@ -27,15 +24,15 @@ namespace dcp2p
 	public:
 		typedef boost::shared_ptr<p2p_connection> pointer;
 
-		static pointer Create(boost::asio::io_service& io_service, boost::uuids::uuid &localId)
+		static pointer Create(boost::asio::io_service& io_service, std::string &localId)
 		{
 			return pointer(new p2p_connection(io_service, localId));
 		}
 
 		boost::signals2::signal<void(std::string)>											Log;
-		boost::signals2::signal<void(bool, p2p_connection::pointer, boost::uuids::uuid)>	NodeConnected;
+		boost::signals2::signal<void(bool, p2p_connection::pointer, std::string)>			NodeConnected;
 		boost::signals2::signal<void(p2p_connection::pointer, p2p_packet)>					ReceivedData;
-		boost::signals2::signal<void(boost::uuids::uuid)>									NodeDisconnected;
+		boost::signals2::signal<void(std::string)>											NodeDisconnected;
 		tcp::socket& Socket();
 
 		void Start();
@@ -48,7 +45,7 @@ namespace dcp2p
 
 	private:
 
-		p2p_connection(boost::asio::io_service& io_service, boost::uuids::uuid &localId);
+		p2p_connection(boost::asio::io_service& io_service, std::string &localId);
 
 		// callback declarations
 		void handle_read_header(const boost::system::error_code& error);
@@ -59,8 +56,8 @@ namespace dcp2p
 		boost::asio::io_service &_io_service;
 		p2p_packet packet_;
 		packet_queue write_queue_;
-		boost::uuids::uuid &_localId;
-		boost::uuids::uuid _remoteId;
+		std::string &_localId;
+		std::string _remoteId;
 	};
 }
 

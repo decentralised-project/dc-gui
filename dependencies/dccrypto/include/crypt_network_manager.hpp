@@ -16,6 +16,7 @@
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
+#include <openssl/evp.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -23,6 +24,7 @@
 #include "p2p_manager.hpp"
 #include "p2p_connection.hpp"
 #include "p2p_packet.hpp"
+#include "crypt_ec_helper.hpp"
 
 namespace dccrypto
 {
@@ -37,22 +39,23 @@ namespace dccrypto
 		}
 
 		boost::signals2::signal<void(std::string)>													Log;
-		boost::signals2::signal<void(bool, dcp2p::p2p_connection::pointer, boost::uuids::uuid)>		NodeConnected;
+		boost::signals2::signal<void(bool, dcp2p::p2p_connection::pointer, std::string)>			NodeConnected;
 		boost::signals2::signal<void(dcp2p::p2p_connection::pointer, dcp2p::p2p_packet)>			DataReceived;
-		boost::signals2::signal<void(boost::uuids::uuid)>											NodeDisconnected;
+		boost::signals2::signal<void(std::string)>													NodeDisconnected;
 
-		void Run(int incomingPort);
+		void Run(int incomingPort, std::string username);
 		void Shutdown();
 
 	private:
 		crypt_network_manager(std::string dataDirPath);
 
-		void on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, boost::uuids::uuid remoteId);
+		void on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, std::string remoteId);
 		void on_log_recieved(std::string msg);
 		void on_data_recieved(dcp2p::p2p_connection::pointer connection, dcp2p::p2p_packet packet);
-		void on_node_disconnected(boost::uuids::uuid remoteId);
+		void on_node_disconnected(std::string remoteId);
 
 		dcp2p::p2p_manager::pointer manager;
+		crypt_ec_helper::pointer helper;
 		std::string data_path;
 	};
 }

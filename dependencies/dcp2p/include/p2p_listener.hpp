@@ -11,9 +11,6 @@
 #include <iostream>
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
-#include <boost/uuid/uuid.hpp>            
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp> 
 #include "p2p_connection.hpp"
 
 using namespace boost::asio::ip;
@@ -27,7 +24,7 @@ namespace dcp2p
 	public:
 		typedef boost::shared_ptr<p2p_listener> pointer;
 
-		static pointer Create(boost::asio::io_service &io_service, int incomingPort, boost::uuids::uuid &localId)
+		static pointer Create(boost::asio::io_service &io_service, int incomingPort, std::string &localId)
 		{
 			return pointer(new p2p_listener(io_service, incomingPort, localId));
 		}
@@ -36,13 +33,13 @@ namespace dcp2p
 		void Shutdown();
 
 	private:
-		p2p_listener(boost::asio::io_service &io_service, int incomingPort, boost::uuids::uuid &localId);
+		p2p_listener(boost::asio::io_service &io_service, int incomingPort, std::string &localId);
 
 		void handle_accept(p2p_connection::pointer new_connection, const boost::system::error_code& error);
 
 		boost::asio::io_service &_io_service;
 		tcp::acceptor acceptor_;
-		boost::uuids::uuid &_localId;
+		std::string &_localId;
 		boost::shared_ptr<p2p_manager> manager_;
 	};
 }

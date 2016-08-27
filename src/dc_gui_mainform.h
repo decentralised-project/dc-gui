@@ -51,12 +51,16 @@ private:
 	dc_gui_logindialog::pointer login_dialog;
 	dc_gui_settingsdialog::pointer settings_dialog;
 	dc_config::pointer config;
+	std::string data_dir;
+	int incoming_port;
 
-	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, boost::uuids::uuid remoteId);
+	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, std::string remoteId);
 	void OnLog(std::string msg);
 	void OnDataReceived(p2p_connection::pointer connection, p2p_packet packet);
-	void OnNodeDisconnected(boost::uuids::uuid remoteId);
+	void OnNodeDisconnected(std::string remoteId);
+	void OnLoginClicked(std::string name);
 
+	void on_login_selected(wxCommandEvent& event);
 	void on_settings_selected(wxCommandEvent& event);
 	void on_form_close(wxCommandEvent& event);
 

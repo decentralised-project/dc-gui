@@ -10,6 +10,7 @@
 #include <memory>
 
 #include <openssl/bn.h>
+#include <openssl/evp.h>
 #include <openssl/ec.h>
 #include <openssl/obj_mac.h>
 #include <openssl/ecdsa.h>
@@ -39,6 +40,8 @@ namespace dccrypto
 		EC_KEY* get_key_pair();
 		std::string get_public_key(EC_KEY *keypair);
 		void save_key_pair(std::string path, EC_KEY *keypair);
+		EC_KEY* load_key_pair(std::string path);
+		unsigned char *ecdh(size_t *secret_len);
 		void shutdown();
 
 	private:

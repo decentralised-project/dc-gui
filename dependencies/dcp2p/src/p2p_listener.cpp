@@ -3,7 +3,7 @@
 
 namespace dcp2p
 {
-	p2p_listener::p2p_listener(boost::asio::io_service &io_service, int incomingPort, boost::uuids::uuid &localId)
+	p2p_listener::p2p_listener(boost::asio::io_service &io_service, int incomingPort, std::string &localId)
 		: _io_service(io_service), acceptor_(_io_service, tcp::endpoint(tcp::v4(), incomingPort)), _localId(localId)
 	{
 	}
