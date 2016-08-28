@@ -17,6 +17,9 @@ namespace dccrypto
 
 		if (public_key)
 			free(public_key);
+
+		EVP_cleanup();
+		ERR_free_strings();
 	}
 
 	EC_KEY* crypt_ec_helper::generate_key_pair()
@@ -144,7 +147,7 @@ namespace dccrypto
 		EC_POINT *pub = EC_POINT_new(ecgrp);
 
 		size_t len = EC_POINT_oct2point(ecgrp, pub, vch.data(), vch.size(), NULL);
-		
+
 		EC_GROUP_free(ecgrp);
 
 		return pub;
@@ -228,6 +231,105 @@ namespace dccrypto
 		secretLen = ECDH_compute_key(*secret, secretLen, pPub, key, NULL);
 
 		return secretLen;
+	}
+
+	int crypt_ec_helper::encrypt(unsigned char* cipherText, unsigned char *message, int messageLength, unsigned char *secret, int secretLength)
+	{
+		EVP_CIPHER_CTX *ctx;
+		int len, ciphertext_len;
+		unsigned char* key = new unsigned char[32];
+		unsigned char* iv = new unsigned char[16];
+
+		int keyLen = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha512(),
+			NULL,
+			secret, secretLength, 150000,
+			key, iv);
+
+		/* Create and initialise the context */
+		if (!(ctx = EVP_CIPHER_CTX_new()))
+			throw std::runtime_error("Encrypt: Failed to create cipher context.\n");
+
+		/* Initialise the encryption operation. IMPORTANT - ensure you use a key
+		* and IV size appropriate for your cipher
+		* In this example we are using 256 bit AES (i.e. a 256 bit key). The
+		* IV size for *most* modes is the same as the block size. For AES this
+		* is 128 bits */
+		if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+			throw std::runtime_error("Encrypt: Failed to initialize cipher.\n");
+
+		/* Provide the message to be encrypted, and obtain the encrypted output.
+		* EVP_EncryptUpdate can be called multiple times if necessary
+		*/
+		if (1 != EVP_EncryptUpdate(ctx, cipherText, &len, message, messageLength))
+			throw std::runtime_error("Encrypt: Failed to encrypt message.\n");
+
+		ciphertext_len = len;
+
+		/* Finalise the encryption. Further ciphertext bytes may be written at
+		* this stage.
+		*/
+		if (1 != EVP_EncryptFinal_ex(ctx, cipherText + len, &len))
+			throw std::runtime_error("Encrypt: Failed to finalize message encryption.\n");
+
+		ciphertext_len += len;
+
+		free(key);
+		free(iv);
+		EVP_CIPHER_CTX_free(ctx);
+
+		return ciphertext_len;
+	}
+
+	int crypt_ec_helper::decrypt(unsigned char* cipherText, int cipherTextLen, unsigned char *secret, int secretLength, unsigned char* plainText)
+	{
+		EVP_CIPHER_CTX *ctx;
+
+		int len, plaintext_len;
+
+		unsigned char* key = new unsigned char[32];
+		unsigned char* iv = new unsigned char[16];
+
+		int keyLen = EVP_BytesToKey(EVP_aes_256_cbc(), EVP_sha512(),
+			NULL,
+			secret, secretLength, 150000,
+			key, iv);
+
+		/* Create and initialise the context */
+		if (!(ctx = EVP_CIPHER_CTX_new()))
+			throw std::runtime_error("Decrypt: Failed to create cipher context.\n");
+
+		/* Initialise the decryption operation. IMPORTANT - ensure you use a key
+		* and IV size appropriate for your cipher
+		* In this example we are using 256 bit AES (i.e. a 256 bit key). The
+		* IV size for *most* modes is the same as the block size. For AES this
+		* is 128 bits */
+		if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+			throw std::runtime_error("Decrypt: Failed to initialize cipher.\n");
+
+		plaintext_len = 0;
+
+		/* Provide the message to be decrypted, and obtain the plaintext output.
+		* EVP_DecryptUpdate can be called multiple times if necessary
+		*/
+		if (1 != EVP_DecryptUpdate(ctx, plainText, &len, cipherText, cipherTextLen))
+			throw std::runtime_error("Decrypt: Failed to decrypt message.\n");
+
+		plaintext_len += len;
+
+		/* Finalise the decryption. Further plaintext bytes may be written at
+		* this stage.
+		*/
+		if (1 != EVP_DecryptFinal_ex(ctx, plainText + len, &len))
+			throw std::runtime_error("Encrypt: Failed to finalize message encryption.\n");
+
+		plaintext_len += len;
+
+		/* Clean up */
+		free(key);
+		free(iv);
+		EVP_CIPHER_CTX_free(ctx);
+
+		return plaintext_len;
 	}
 
 	// Credit: https://github.com/keeshux

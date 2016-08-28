@@ -54,6 +54,29 @@ namespace dccrypto
 		Log(std::string("Shared secret ").append(mystr));
 		// ****
 
+		ERR_load_crypto_strings();
+		OpenSSL_add_all_algorithms();
+
+		std::string testMessage = "The quick brown fox jumped over the lazy dog ...";
+
+		unsigned char *testMessagePtr = (unsigned char*)testMessage.c_str();
+		unsigned char *cipherText = new unsigned char[testMessage.size() + 1024];
+		int cipherTextLen = helper->encrypt(cipherText, testMessagePtr, testMessage.size(), secret, secretLen);
+		std::string cipherStr = std::string(cipherText, cipherText + cipherTextLen);
+
+		Log(std::string("Test Encrypted: ").append(cipherStr));
+
+		unsigned char *cipherTextPtr = (unsigned char*)cipherStr.c_str();
+		unsigned char *plainText = new unsigned char[cipherStr.size() + 4096];
+		int plainTextLen = helper->decrypt(cipherText, cipherTextLen, secret, secretLen, plainText);
+		std::string plainStr = std::string(plainText, plainText + plainTextLen);
+
+		Log(std::string("Test Decrypted: ").append(plainStr));
+
+		free(cipherText);
+		free(plainText);
+		ERR_free_strings();
+
 		NodeConnected(isIncoming, connection, remoteId);
 	}
 

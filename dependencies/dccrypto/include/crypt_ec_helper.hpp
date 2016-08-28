@@ -47,6 +47,8 @@ namespace dccrypto
 		void save_key_pair(std::string path, EC_KEY *keypair);
 		EC_KEY* load_key_pair(std::string path);
 		int ecdh(unsigned char **secret, EC_KEY *key, const EC_POINT *pPub);
+		int encrypt(unsigned char* cipherText, unsigned char *message, int messageLength, unsigned char *secret, int secretLength);
+		int decrypt(unsigned char* cipherText, int cipherTextLen, unsigned char *secret, int secretLength, unsigned char* plainText);
 		void shutdown();
 
 	private:
