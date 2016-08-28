@@ -11,9 +11,11 @@ dc_gui_logindialog::dc_gui_logindialog(std::string dataDirPath, wxWindow* parent
 void dc_gui_logindialog::on_generate_click(wxCommandEvent& event)
 {
 	EC_KEY* key = ec->generate_key_pair();
-	std::string pub_key = ec->get_public_key(key);
+	std::string pub_key = ec->to_base58(ec->get_public_key(key));
 
 	this->txtPublicKey->SetValue(pub_key);
+
+	Log(std::string("Generated public key ").append(pub_key));
 }
 
 void dc_gui_logindialog::on_login_click(wxCommandEvent& event)

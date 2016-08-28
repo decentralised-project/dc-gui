@@ -62,7 +62,7 @@ void dc_gui_mainform::OnNodeConnected(bool isIncoming, p2p_connection::pointer c
 	}
 
 	std::stringstream ss;
-	ss << connection->Socket().remote_endpoint();
+	ss << connection->Socket().remote_endpoint() << " " << remoteId;
 
 	txt.append(ss.str());
 

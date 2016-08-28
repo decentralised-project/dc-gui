@@ -2,6 +2,8 @@
 
 namespace dccrypto
 {
+	static const char* pszBase58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+
 	crypt_ec_helper::crypt_ec_helper()
 	{
 		eckey = NULL;
@@ -32,27 +34,120 @@ namespace dccrypto
 		return eckey;
 	}
 
-	std::string crypt_ec_helper::get_public_key(EC_KEY *keypair)
+	const EC_POINT* crypt_ec_helper::get_public_key(EC_KEY *keypair)
 	{
 		const EC_POINT *priv_bn;
-		priv_bn = EC_KEY_get0_public_key(keypair);
+		return EC_KEY_get0_public_key(keypair);
+	}
 
-		size_t pub_len;
-		uint8_t *pub_copy;
+	std::string crypt_ec_helper::to_base58(const EC_POINT* public_key)
+	{
+		unsigned char *ret = new unsigned char[2048];
+		EC_GROUP *ecgrp = EC_GROUP_new_by_curve_name(NID_secp256k1);
 
-		EC_KEY_set_conv_form(keypair, POINT_CONVERSION_COMPRESSED);
+		size_t len = EC_POINT_point2oct(ecgrp, public_key, POINT_CONVERSION_UNCOMPRESSED, NULL, 0, NULL);
+		EC_POINT_point2oct(ecgrp, public_key, POINT_CONVERSION_UNCOMPRESSED, ret, len, NULL);
 
-		pub_len = i2o_ECPublicKey(keypair, NULL);
-		public_key = (uint8_t*)calloc(pub_len, sizeof(uint8_t));
+		unsigned char* pbegin = ret;
+		unsigned char* pend = ret + len;
 
-		/* pub_copy is needed because i2o_ECPublicKey alters the input pointer */
-		pub_copy = public_key;
-		if (i2o_ECPublicKey(keypair, &pub_copy) != pub_len) {
-			puts("Unable to decode public key");
-			return "Error";
+		// Skip & count leading zeroes.
+		int zeroes = 0;
+		int length = 0;
+		while (pbegin != pend && *pbegin == 0) {
+			pbegin++;
+			zeroes++;
 		}
+		// Allocate enough space in big-endian base58 representation.
+		int size = (pend - pbegin) * 138 / 100 + 1; // log(256) / log(58), rounded up.
+		std::vector<unsigned char> b58(size);
+		// Process the bytes.
+		while (pbegin != pend) {
+			int carry = *pbegin;
+			int i = 0;
+			// Apply "b58 = b58 * 256 + ch".
+			for (std::vector<unsigned char>::reverse_iterator it = b58.rbegin(); (carry != 0 || i < length) && (it != b58.rend()); it++, i++) {
+				carry += 256 * (*it);
+				*it = carry % 58;
+				carry /= 58;
+			}
 
-		return std::string(base58(public_key, pub_len));
+			assert(carry == 0);
+			length = i;
+			pbegin++;
+		}
+		// Skip leading zeroes in base58 result.
+		std::vector<unsigned char>::iterator it = b58.begin() + (size - length);
+		while (it != b58.end() && *it == 0)
+			it++;
+		// Translate the result into a string.
+		std::string str;
+		str.reserve(zeroes + (b58.end() - it));
+		str.assign(zeroes, '1');
+		while (it != b58.end())
+			str += pszBase58[*(it++)];
+
+		free(ret);
+		EC_GROUP_free(ecgrp);
+
+		return str;
+	}
+
+	const EC_POINT* crypt_ec_helper::from_base58(std::string base58)
+	{
+		const char* psz = base58.c_str();
+		std::vector<unsigned char> vch;
+
+		// Skip leading spaces.
+		while (*psz && isspace(*psz))
+			psz++;
+		// Skip and count leading '1's.
+		int zeroes = 0;
+		while (*psz == '1') {
+			zeroes++;
+			psz++;
+		}
+		// Allocate enough space in big-endian base256 representation.
+		std::vector<unsigned char> b256(strlen(psz) * 733 / 1000 + 1); // log(58) / log(256), rounded up.
+		// Process the characters.
+		while (*psz && !isspace(*psz)) {
+			// Decode base58 character
+			const char* ch = strchr(pszBase58, *psz);
+			if (ch == NULL)
+				return false;
+			// Apply "b256 = b256 * 58 + ch".
+			int carry = ch - pszBase58;
+			for (std::vector<unsigned char>::reverse_iterator it = b256.rbegin(); it != b256.rend(); it++) {
+				carry += 58 * (*it);
+				*it = carry % 256;
+				carry /= 256;
+			}
+			assert(carry == 0);
+			psz++;
+		}
+		// Skip trailing spaces.
+		while (isspace(*psz))
+			psz++;
+		if (*psz != 0)
+			return false;
+		// Skip leading zeroes in b256.
+		std::vector<unsigned char>::iterator it = b256.begin();
+		while (it != b256.end() && *it == 0)
+			it++;
+		// Copy result into output vector.
+		vch.reserve(zeroes + (b256.end() - it));
+		vch.assign(zeroes, 0x00);
+		while (it != b256.end())
+			vch.push_back(*(it++));
+
+		EC_GROUP *ecgrp = EC_GROUP_new_by_curve_name(NID_secp256k1);
+		EC_POINT *pub = EC_POINT_new(ecgrp);
+
+		size_t len = EC_POINT_oct2point(ecgrp, pub, vch.data(), vch.size(), NULL);
+		
+		EC_GROUP_free(ecgrp);
+
+		return pub;
 	}
 
 	void crypt_ec_helper::save_key_pair(std::string path, EC_KEY *keypair)
@@ -116,7 +211,7 @@ namespace dccrypto
 		return eckey;
 	}
 
-	int ecdh(unsigned char **secret, EC_KEY *key, const EC_POINT *pPub)
+	int crypt_ec_helper::ecdh(unsigned char **secret, EC_KEY *key, const EC_POINT *pPub)
 	{
 		int secretLen;
 

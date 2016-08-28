@@ -5,13 +5,14 @@ namespace dccrypto
 	crypt_network_manager::crypt_network_manager(std::string dataDirPath)
 	{
 		data_path = dataDirPath;
+		pkey = NULL;
 		helper = crypt_ec_helper::Create();
 	}
 
 	void crypt_network_manager::Run(int incomingPort, std::string name)
 	{
-		EC_KEY* pkey = helper->load_key_pair(std::string(data_path).append("private_keys/").append(name).append(".pem"));
-		std::string publickey = helper->get_public_key(pkey);
+		pkey = helper->load_key_pair(std::string(data_path).append("private_keys/").append(name).append(".pem"));
+		std::string publickey = helper->to_base58(helper->get_public_key(pkey));
 
 		Log(std::string("Public key is ").append(publickey));
 
@@ -27,6 +28,9 @@ namespace dccrypto
 	{
 		if (manager)
 			manager->Shutdown();	
+
+		if (pkey)
+			EC_KEY_free(pkey);
 	}
 
 	void crypt_network_manager::on_log_recieved(std::string msg)
@@ -36,7 +40,19 @@ namespace dccrypto
 
 	void crypt_network_manager::on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, std::string remoteId)
 	{
-		Log(std::string("Node connected: ").append(remoteId));
+		unsigned char* secret = NULL;
+		EC_POINT* remotePublicKey = NULL;
+
+		int secretLen = helper->ecdh(&secret, pkey, remotePublicKey);
+
+		// *** TODO: remove, just for testing
+		std::stringstream ss;
+		for (int i = 0; i<secretLen; ++i)
+			ss << std::hex << (int)secret[i];
+		std::string mystr = ss.str();
+
+		Log(std::string("Shared secret ").append(mystr));
+		// ****
 
 		NodeConnected(isIncoming, connection, remoteId);
 	}

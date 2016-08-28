@@ -57,6 +57,7 @@ namespace dccrypto
 		dcp2p::p2p_manager::pointer manager;
 		crypt_ec_helper::pointer helper;
 		std::string data_path;
+		EC_KEY* pkey;
 	};
 }
 

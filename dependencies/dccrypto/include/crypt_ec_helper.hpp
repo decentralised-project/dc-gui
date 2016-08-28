@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <string>
 #include <memory>
 
@@ -20,6 +21,8 @@
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
+
+using namespace std;
 
 namespace dccrypto
 {
@@ -38,10 +41,12 @@ namespace dccrypto
 
 		EC_KEY* generate_key_pair();
 		EC_KEY* get_key_pair();
-		std::string get_public_key(EC_KEY *keypair);
+		const EC_POINT* get_public_key(EC_KEY *keypair);
+		std::string to_base58(const EC_POINT* public_key);
+		const EC_POINT* from_base58(std::string base58);
 		void save_key_pair(std::string path, EC_KEY *keypair);
 		EC_KEY* load_key_pair(std::string path);
-		unsigned char *ecdh(size_t *secret_len);
+		int ecdh(unsigned char **secret, EC_KEY *key, const EC_POINT *pPub);
 		void shutdown();
 
 	private:
