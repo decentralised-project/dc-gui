@@ -41,7 +41,7 @@ namespace dccrypto
 	void crypt_network_manager::on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, std::string remoteId)
 	{
 		unsigned char* secret = NULL;
-		EC_POINT* remotePublicKey = NULL;
+		const EC_POINT* remotePublicKey = helper->from_base58(remoteId);
 
 		int secretLen = helper->ecdh(&secret, pkey, remotePublicKey);
 
