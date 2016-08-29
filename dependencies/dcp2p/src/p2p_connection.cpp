@@ -155,12 +155,12 @@ namespace dcp2p
 				ping[0] = 0;
 				Send(ping, 1);
 			}
-			else
-				boost::asio::async_write(socket_,
- 										 boost::asio::buffer(write_queue_.front().data(),
-										 write_queue_.front().length()),
-										 boost::bind(&p2p_connection::handle_write, shared_from_this(),
-										 boost::asio::placeholders::error));
+
+			boost::asio::async_write(socket_,
+   									 boost::asio::buffer(write_queue_.front().data(),
+									 write_queue_.front().length()),
+									 boost::bind(&p2p_connection::handle_write, shared_from_this(),
+									 boost::asio::placeholders::error));
 		}
 		else
 		{
