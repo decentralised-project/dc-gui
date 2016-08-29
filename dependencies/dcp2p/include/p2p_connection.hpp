@@ -40,7 +40,7 @@ namespace dcp2p
 		void Shutdown();
 
 		void Send(p2p_packet packet);
-		void Send(char* data, size_t length);
+		void Send(unsigned char* data, size_t length);
 		void Send(std::string message);
 
 	private:

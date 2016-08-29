@@ -38,10 +38,14 @@ void dc_gui_mainform::Init()
 		incoming_port = config->GetInteger("incoming_port");
 		data_dir = config->GetString("data_dir");
 
-		txtMain->WriteText("\r\nLoaded configuration.");
+		txtMain->Newline();
+		txtMain->WriteText("Loaded configuration.");
 	}
 	else
-		txtMain->WriteText("\r\nCouldn't find config.json, using defaults.");
+	{
+		txtMain->Newline();
+		txtMain->WriteText("Couldn't find config.json, using defaults.");
+	}
 
 	login_dialog = dc_gui_logindialog::Create(data_dir, this);
 	login_dialog->Login.connect(boost::bind(&dc_gui_mainform::OnLoginClicked, this, _1));

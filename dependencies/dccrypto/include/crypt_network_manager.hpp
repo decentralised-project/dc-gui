@@ -45,6 +45,7 @@ namespace dccrypto
 		boost::signals2::signal<void(std::string)>													NodeDisconnected;
 
 		void Run(int incomingPort, std::string username);
+		void Send(unsigned char* data);
 		void Shutdown();
 
 	private:

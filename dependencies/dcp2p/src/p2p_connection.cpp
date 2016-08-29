@@ -69,7 +69,7 @@ namespace dcp2p
 		write_queue_.push_back(packet);
 	}
 
-	void p2p_connection::Send(char* data, size_t length)
+	void p2p_connection::Send(unsigned char* data, size_t length)
 	{
 		packet_.body_length(length);
 		memcpy(packet_.body(), data, packet_.body_length());
@@ -107,6 +107,18 @@ namespace dcp2p
 	{
 		if (!error)
 		{
+			// if this is a single byte ping packet, ping back and return, or just return if it's a reply.
+			if (packet_.body_length() == 1)
+			{
+				if (packet_.body()[0] == 0)
+				{
+					unsigned char ping[1];
+					ping[0] = 0;
+					Send(ping, 1);
+				}
+				return;
+			}
+
 			std::string body(packet_.body(), packet_.body() + packet_.body_length());
 
 			if (_remoteId == "")
@@ -138,7 +150,10 @@ namespace dcp2p
 			if (write_queue_.empty())
 			{
 				boost::this_thread::sleep(boost::posix_time::milliseconds(3000));
-				//Send(std::string("PING")); TODO
+
+				unsigned char ping[1];
+				ping[0] = 0;
+				Send(ping, 1);
 			}
 			else
 				boost::asio::async_write(socket_,
