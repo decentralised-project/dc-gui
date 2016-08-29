@@ -24,6 +24,28 @@ namespace dccrypto
 		manager->Run(incomingPort, publickey);
 	}
 
+	void crypt_network_manager::Send(std::string remoteId, unsigned char* data, size_t length)
+	{
+		for (std::vector<dccrypto::crypt_connection::pointer>::iterator it = connections.begin(); it != connections.end(); ++it) {
+			if ((*it)->GetRemotePublicKeyBase58() == remoteId)
+			{
+				unsigned char *cipherText = new unsigned char[length + 2048]; // 2k extra extra buffer incase encrypted data is bigger
+				int cipherTextLength = (*it)->Encrypt(cipherText, data, length);
+				(*it)->GetP2PConnection()->Send(cipherText, cipherTextLength);
+				break;
+			}
+		}
+	}
+
+	void crypt_network_manager::Send(unsigned char* data, size_t length)
+	{
+		for (std::vector<dccrypto::crypt_connection::pointer>::iterator it = connections.begin(); it != connections.end(); ++it) {
+			unsigned char *cipherText = new unsigned char[length + 2048]; // 2k extra extra buffer incase encrypted data is bigger
+			int cipherTextLength = (*it)->Encrypt(cipherText, data, length);
+			(*it)->GetP2PConnection()->Send(cipherText, cipherTextLength);
+		}
+	}
+
 	void crypt_network_manager::Shutdown()
 	{
 		if (manager)

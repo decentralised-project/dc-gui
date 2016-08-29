@@ -153,6 +153,14 @@ void dc_gui_mainform::on_settings_selected(wxCommandEvent& event)
 	settings_dialog->Show();
 }
 
+void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
+{
+	wxString input = txtInput->GetValue();
+	_manager->Send((unsigned char*)input.data().AsChar(), input.size());
+
+	txtInput->SetValue("");
+}
+
 void dc_gui_mainform::on_form_close(wxCommandEvent& event)
 {
 	if (_manager)

@@ -41,7 +41,7 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
-	txtMain = new wxRichTextCtrl( m_panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_AUTO_URL|wxTE_READONLY|wxVSCROLL|wxHSCROLL|wxNO_BORDER|wxWANTS_CHARS );
+	txtMain = new wxRichTextCtrl( m_panel4, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_AUTO_URL|wxTE_READONLY|wxNO_BORDER|wxVSCROLL|wxWANTS_CHARS );
 	bSizer2->Add( txtMain, 1, wxEXPAND | wxALL, 1 );
 	
 	m_listBox1 = new wxListBox( m_panel4, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, NULL, 0|wxNO_BORDER ); 
@@ -68,6 +68,7 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
 	this->Connect( menuLogin->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_login_selected ) );
 	this->Connect( menuSettings->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
+	txtInput->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainDcForm::on_input_enter_pressed ), NULL, this );
 }
 
 MainDcForm::~MainDcForm()
@@ -76,6 +77,7 @@ MainDcForm::~MainDcForm()
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_login_selected ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
+	txtInput->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainDcForm::on_input_enter_pressed ), NULL, this );
 	
 }
 

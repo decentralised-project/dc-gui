@@ -40,6 +40,8 @@ namespace dccrypto
 
 		const EC_POINT* GetRemotePublicKey();
 		std::string GetRemotePublicKeyBase58();
+		int Encrypt(unsigned char* cipher, unsigned char* data, size_t length);
+		dcp2p::p2p_connection::pointer GetP2PConnection();
 
 	private:
 		crypt_connection(crypt_ec_helper::pointer helper, 

@@ -634,7 +634,7 @@
                         <event name="OnSetFocus"></event>
                         <event name="OnSize"></event>
                         <event name="OnText"></event>
-                        <event name="OnTextEnter"></event>
+                        <event name="OnTextEnter">on_input_enter_pressed</event>
                         <event name="OnTextMaxLen"></event>
                         <event name="OnTextURL"></event>
                         <event name="OnUpdateUI"></event>

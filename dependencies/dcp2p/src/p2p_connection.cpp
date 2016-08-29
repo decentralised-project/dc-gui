@@ -99,7 +99,8 @@ namespace dcp2p
 		else
 		{
 			// we got disconnected or sumfin
-			NodeDisconnected(_remoteId);
+			if (_remoteId != "")
+				NodeDisconnected(_remoteId);
 		}
 	}
 
@@ -116,7 +117,6 @@ namespace dcp2p
 					ping[0] = 0;
 					Send(ping, 1);
 				}
-				return;
 			}
 
 			std::string body(packet_.body(), packet_.body() + packet_.body_length());
@@ -143,6 +143,10 @@ namespace dcp2p
 					socket_.close();
 					return;
 				}
+			}
+			else if (packet_.body_length() == 1)
+			{
+				// do nothing, don't report a ping packet
 			}
 			else
 				ReceivedData(shared_from_this(), packet_);

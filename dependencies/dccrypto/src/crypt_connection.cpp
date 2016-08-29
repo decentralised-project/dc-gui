@@ -23,4 +23,14 @@ namespace dccrypto
 	{
 		return remote_public_key_base58;
 	}
+
+	int crypt_connection::Encrypt(unsigned char* cipher, unsigned char* data, size_t length)
+	{
+		return ec->encrypt(cipher, data, length, shared_secret, shared_secret_len);
+	}
+
+	dcp2p::p2p_connection::pointer crypt_connection::GetP2PConnection()
+	{
+		return p2pconnection;
+	}
 }

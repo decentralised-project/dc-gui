@@ -63,6 +63,7 @@ private:
 	void on_login_selected(wxCommandEvent& event);
 	void on_settings_selected(wxCommandEvent& event);
 	void on_form_close(wxCommandEvent& event);
+	void on_input_enter_pressed(wxCommandEvent& event);
 
 	void writeToRichText(std::string txt);
 };
