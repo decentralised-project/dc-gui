@@ -114,7 +114,7 @@ namespace dcp2p
 				_remoteId = body.substr(0, packet_.body_length());
 				if (_localId != _remoteId)
 				{
-					NodeConnected(true, shared_from_this(), _remoteId);
+					NodeConnected(isIncoming_, shared_from_this(), _remoteId);
 
 					std::stringstream id_stream;
 					id_stream << _localId;

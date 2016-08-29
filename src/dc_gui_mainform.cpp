@@ -26,7 +26,7 @@ void dc_gui_mainform::Init()
 #endif
 
 	txtMain->BeginTextColour(wxColour(0, 90, 0, 0));
-	txtMain->WriteText("Decentralised GUI v1.0.0\r\n");
+	txtMain->WriteText("Decentralised GUI v1.0.0");
 	txtMain->EndTextColour();
 
 	incoming_port = 6453;
@@ -38,10 +38,10 @@ void dc_gui_mainform::Init()
 		incoming_port = config->GetInteger("incoming_port");
 		data_dir = config->GetString("data_dir");
 
-		txtMain->WriteText("Loaded configuration.\r\n");
+		txtMain->WriteText("\r\nLoaded configuration.");
 	}
 	else
-		txtMain->WriteText("Couldn't find config.json, using defaults.\r\n");
+		txtMain->WriteText("\r\nCouldn't find config.json, using defaults.");
 
 	login_dialog = dc_gui_logindialog::Create(data_dir, this);
 	login_dialog->Login.connect(boost::bind(&dc_gui_mainform::OnLoginClicked, this, _1));
@@ -119,8 +119,8 @@ void dc_gui_mainform::writeToRichText(std::string txt)
 	txtMain->SetCaretPosition(txtMain->GetLastPosition() - 1);
 	size_t before_number_of_lines = txtMain->GetNumberOfLines();
 
-	txtMain->WriteText(txt);
 	txtMain->Newline();
+	txtMain->WriteText(txt);
 
 	size_t after_number_of_lines = txtMain->GetNumberOfLines();
 	txtMain->Thaw();
