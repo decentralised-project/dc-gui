@@ -26,6 +26,7 @@
 #include <iostream>
 #include "dc_gui_logindialog.h"
 #include "dc_gui_settingsdialog.h"
+#include "dc_gui_chatpanel.h"
 #include "dc_config.h"
 #include "crypt_network_manager.hpp"
 

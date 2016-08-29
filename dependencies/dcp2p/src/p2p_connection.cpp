@@ -104,6 +104,11 @@ namespace dcp2p
 		}
 	}
 
+	std::string p2p_connection::GetRemoteId()
+	{
+		return _remoteId;
+	}
+
 	void p2p_connection::handle_read_body(const boost::system::error_code& error)
 	{
 		if (!error)

@@ -156,7 +156,28 @@ void dc_gui_mainform::on_settings_selected(wxCommandEvent& event)
 void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 {
 	wxString input = txtInput->GetValue();
-	_manager->Send((unsigned char*)input.data().AsChar(), input.size());
+	if (input.StartsWith("/") && input.Length() > 4)
+	{
+		wxString cmd = input.Lower().SubString(1, 4);
+		if (cmd == "join")
+		{
+			wxString name = input.SubString(6, input.Length());
+			writeToRichText(std::string("Joining channel ").append(name));
+			dc_gui_chatpanel* panel = new dc_gui_chatpanel(tabsMain, name);
+			tabsMain->AddPage(panel, name, false);
+			tabsMain->SetSelection(tabsMain->GetPageCount() - 1);
+			txtInput->SetFocus();
+			//tabsMain->
+		}
+		else if (cmd == "help")
+		{
+			writeToRichText(std::string("/help\t\tShows this help text.\r\n")
+				.append("/join #public\tJoins a chat channel."));
+			//tabsMain->
+		}
+	}
+	else
+		_manager->Send((unsigned char*)input.data().AsChar(), input.size());
 
 	txtInput->SetValue("");
 }

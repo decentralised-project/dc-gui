@@ -26,24 +26,28 @@ namespace dccrypto
 
 	void crypt_network_manager::Send(std::string remoteId, unsigned char* data, size_t length)
 	{
+		unsigned char *cipherText = new unsigned char[length + 2048]; // 2k extra extra buffer incase encrypted data is bigger
+
 		for (std::vector<dccrypto::crypt_connection::pointer>::iterator it = connections.begin(); it != connections.end(); ++it) {
 			if ((*it)->GetRemotePublicKeyBase58() == remoteId)
 			{
-				unsigned char *cipherText = new unsigned char[length + 2048]; // 2k extra extra buffer incase encrypted data is bigger
 				int cipherTextLength = (*it)->Encrypt(cipherText, data, length);
 				(*it)->GetP2PConnection()->Send(cipherText, cipherTextLength);
 				break;
 			}
 		}
+		free(cipherText);
 	}
 
 	void crypt_network_manager::Send(unsigned char* data, size_t length)
 	{
+		unsigned char *cipherText = new unsigned char[length + 2048]; // 2k extra extra buffer incase encrypted data is bigger
+
 		for (std::vector<dccrypto::crypt_connection::pointer>::iterator it = connections.begin(); it != connections.end(); ++it) {
-			unsigned char *cipherText = new unsigned char[length + 2048]; // 2k extra extra buffer incase encrypted data is bigger
 			int cipherTextLength = (*it)->Encrypt(cipherText, data, length);
 			(*it)->GetP2PConnection()->Send(cipherText, cipherTextLength);
 		}
+		free(cipherText);
 	}
 
 	void crypt_network_manager::Shutdown()
@@ -65,34 +69,25 @@ namespace dccrypto
 		dccrypto::crypt_connection::pointer cnt = dccrypto::crypt_connection::Create(helper, remoteId, pkey, connection);
 		connections.push_back(cnt);
 
-		//ERR_load_crypto_strings();
-		//OpenSSL_add_all_algorithms();
-
-		//std::string testMessage = "The quick brown fox jumped over the lazy dog ...";
-
-		//unsigned char *testMessagePtr = (unsigned char*)testMessage.c_str();
-		//unsigned char *cipherText = new unsigned char[testMessage.size() + 1024];
-		//int cipherTextLen = helper->encrypt(cipherText, testMessagePtr, testMessage.size(), secret, secretLen);
-		//std::string cipherStr = std::string(cipherText, cipherText + cipherTextLen);
-
-		//Log(std::string("Test Encrypted: ").append(cipherStr));
-
-		//unsigned char *cipherTextPtr = (unsigned char*)cipherStr.c_str();
-		//unsigned char *plainText = new unsigned char[cipherStr.size() + 4096];
-		//int plainTextLen = helper->decrypt(cipherText, cipherTextLen, secret, secretLen, plainText);
-		//std::string plainStr = std::string(plainText, plainText + plainTextLen);
-
-		//Log(std::string("Test Decrypted: ").append(plainStr));
-
-		//free(cipherText);
-		//free(plainText);
-		//ERR_free_strings();
-
 		NodeConnected(isIncoming, connection, remoteId);
 	}
 
 	void crypt_network_manager::on_data_recieved(dcp2p::p2p_connection::pointer connection, dcp2p::p2p_packet packet)
 	{
+		unsigned char *plainText = new unsigned char[packet.body_length() + 2048]; // 2k extra extra buffer incase decrypted data is bigger
+		int plainTextLength;
+
+		for (std::vector<dccrypto::crypt_connection::pointer>::iterator it = connections.begin(); it != connections.end(); ++it) {
+			if ((*it)->GetRemotePublicKeyBase58() == connection->GetRemoteId())
+			{
+				plainTextLength = (*it)->Decrypt(plainText, (unsigned char*)packet.body(), packet.body_length());
+				packet.body_length(plainTextLength);
+				memcpy(packet.body(), plainText, plainTextLength);
+				break;
+			}
+		}
+		free(plainText);
+
 		DataReceived(connection, packet);
 	}
 

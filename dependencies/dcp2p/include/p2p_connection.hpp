@@ -43,6 +43,8 @@ namespace dcp2p
 		void Send(unsigned char* data, size_t length);
 		void Send(std::string message);
 
+		std::string GetRemoteId();
+
 	private:
 
 		p2p_connection(boost::asio::io_service& io_service, std::string &localId);

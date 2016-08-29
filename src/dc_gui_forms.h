@@ -44,7 +44,7 @@ class MainDcForm : public wxFrame
 	protected:
 		wxMenuBar* m_menubar1;
 		wxMenu* m_menu1;
-		wxNotebook* m_notebook3;
+		wxNotebook* tabsMain;
 		wxPanel* m_panel4;
 		wxRichTextCtrl* txtMain;
 		wxListBox* m_listBox1;

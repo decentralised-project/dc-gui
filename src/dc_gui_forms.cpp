@@ -36,8 +36,8 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	wxBoxSizer* bSizer1;
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
-	m_notebook3 = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
-	m_panel4 = new wxPanel( m_notebook3, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
+	tabsMain = new wxNotebook( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0 );
+	m_panel4 = new wxPanel( tabsMain, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer2;
 	bSizer2 = new wxBoxSizer( wxHORIZONTAL );
 	
@@ -51,9 +51,9 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	m_panel4->SetSizer( bSizer2 );
 	m_panel4->Layout();
 	bSizer2->Fit( m_panel4 );
-	m_notebook3->AddPage( m_panel4, wxT("Terminal"), false );
+	tabsMain->AddPage( m_panel4, wxT("Terminal"), false );
 	
-	bSizer1->Add( m_notebook3, 1, wxEXPAND | wxALL, 0 );
+	bSizer1->Add( tabsMain, 1, wxEXPAND | wxALL, 0 );
 	
 	txtInput = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer1->Add( txtInput, 0, wxALL|wxEXPAND, 0 );

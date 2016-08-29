@@ -29,6 +29,11 @@ namespace dccrypto
 		return ec->encrypt(cipher, data, length, shared_secret, shared_secret_len);
 	}
 
+	int crypt_connection::Decrypt(unsigned char* data, unsigned char* cipher, size_t length)
+	{
+		return ec->decrypt(cipher, length, shared_secret, shared_secret_len, data);
+	}
+
 	dcp2p::p2p_connection::pointer crypt_connection::GetP2PConnection()
 	{
 		return p2pconnection;
