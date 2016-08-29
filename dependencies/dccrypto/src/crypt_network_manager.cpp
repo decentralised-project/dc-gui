@@ -40,42 +40,31 @@ namespace dccrypto
 
 	void crypt_network_manager::on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, std::string remoteId)
 	{
-		unsigned char* secret = NULL;
-		const EC_POINT* remotePublicKey = helper->from_base58(remoteId);
+		dccrypto::crypt_connection::pointer cnt = dccrypto::crypt_connection::Create(helper, remoteId, pkey, connection);
+		connections.push_back(cnt);
 
-		int secretLen = helper->ecdh(&secret, pkey, remotePublicKey);
+		//ERR_load_crypto_strings();
+		//OpenSSL_add_all_algorithms();
 
-		// *** TODO: remove, just for testing
-		std::stringstream ss;
-		for (int i = 0; i<secretLen; ++i)
-			ss << std::hex << (int)secret[i];
-		std::string mystr = ss.str();
+		//std::string testMessage = "The quick brown fox jumped over the lazy dog ...";
 
-		Log(std::string("Shared secret ").append(mystr));
-		// ****
+		//unsigned char *testMessagePtr = (unsigned char*)testMessage.c_str();
+		//unsigned char *cipherText = new unsigned char[testMessage.size() + 1024];
+		//int cipherTextLen = helper->encrypt(cipherText, testMessagePtr, testMessage.size(), secret, secretLen);
+		//std::string cipherStr = std::string(cipherText, cipherText + cipherTextLen);
 
-		ERR_load_crypto_strings();
-		OpenSSL_add_all_algorithms();
+		//Log(std::string("Test Encrypted: ").append(cipherStr));
 
-		std::string testMessage = "The quick brown fox jumped over the lazy dog ...";
+		//unsigned char *cipherTextPtr = (unsigned char*)cipherStr.c_str();
+		//unsigned char *plainText = new unsigned char[cipherStr.size() + 4096];
+		//int plainTextLen = helper->decrypt(cipherText, cipherTextLen, secret, secretLen, plainText);
+		//std::string plainStr = std::string(plainText, plainText + plainTextLen);
 
-		unsigned char *testMessagePtr = (unsigned char*)testMessage.c_str();
-		unsigned char *cipherText = new unsigned char[testMessage.size() + 1024];
-		int cipherTextLen = helper->encrypt(cipherText, testMessagePtr, testMessage.size(), secret, secretLen);
-		std::string cipherStr = std::string(cipherText, cipherText + cipherTextLen);
+		//Log(std::string("Test Decrypted: ").append(plainStr));
 
-		Log(std::string("Test Encrypted: ").append(cipherStr));
-
-		unsigned char *cipherTextPtr = (unsigned char*)cipherStr.c_str();
-		unsigned char *plainText = new unsigned char[cipherStr.size() + 4096];
-		int plainTextLen = helper->decrypt(cipherText, cipherTextLen, secret, secretLen, plainText);
-		std::string plainStr = std::string(plainText, plainText + plainTextLen);
-
-		Log(std::string("Test Decrypted: ").append(plainStr));
-
-		free(cipherText);
-		free(plainText);
-		ERR_free_strings();
+		//free(cipherText);
+		//free(plainText);
+		//ERR_free_strings();
 
 		NodeConnected(isIncoming, connection, remoteId);
 	}

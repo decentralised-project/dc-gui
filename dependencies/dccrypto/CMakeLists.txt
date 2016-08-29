@@ -13,11 +13,13 @@ set( ROOT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set  ( ROOT_HEADERS      
        "include/crypt_network_manager.hpp"
        "include/crypt_ec_helper.hpp"
+       "include/crypt_connection.hpp"
      )
 
 set  ( ROOT_SRC
        "src/crypt_network_manager.cpp"
        "src/crypt_ec_helper.cpp"
+       "src/crypt_connection.cpp"
      )
 
 source_group( "include" FILES ${ROOT_HEADERS} )

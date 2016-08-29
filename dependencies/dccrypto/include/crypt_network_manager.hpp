@@ -25,6 +25,7 @@
 #include "p2p_connection.hpp"
 #include "p2p_packet.hpp"
 #include "crypt_ec_helper.hpp"
+#include "crypt_connection.hpp"
 
 namespace dccrypto
 {
@@ -58,6 +59,8 @@ namespace dccrypto
 		crypt_ec_helper::pointer helper;
 		std::string data_path;
 		EC_KEY* pkey;
+
+		std::vector<crypt_connection::pointer> connections;
 	};
 }
 
