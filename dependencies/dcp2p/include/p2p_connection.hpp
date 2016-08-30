@@ -1,8 +1,6 @@
 #ifndef __P2P_CONNECTION_H_INCLUDED__
 #define __P2P_CONNECTION_H_INCLUDED__
 
-#include <iostream>
-#include <string>
 #include <deque>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp> 

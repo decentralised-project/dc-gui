@@ -155,11 +155,18 @@ void dc_gui_mainform::on_settings_selected(wxCommandEvent& event)
 
 void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 {
+	// get the currently selected tab.
+	int selectedIndex = tabsMain->GetSelection();
+	wxString selectedPanelTitle = tabsMain->GetPageText(selectedIndex);
+
+	// get the input text.
 	wxString input = txtInput->GetValue();
+
+	// if this is a command (starting with forward slash)
 	if (input.StartsWith("/") && input.Length() > 4)
 	{
 		wxString cmd = input.Lower().SubString(1, 4);
-		if (cmd == "join")
+		if (cmd == "join") // join a channel
 		{
 			wxString name = input.SubString(6, input.Length());
 			writeToRichText(std::string("Joining channel ").append(name));
@@ -167,18 +174,17 @@ void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 			tabsMain->AddPage(panel, name, false);
 			tabsMain->SetSelection(tabsMain->GetPageCount() - 1);
 			txtInput->SetFocus();
-			//tabsMain->
 		}
-		else if (cmd == "help")
+		else if (cmd == "help") // get some help
 		{
 			writeToRichText(std::string("/help\t\tShows this help text.\r\n")
 				.append("/join #public\tJoins a chat channel."));
-			//tabsMain->
 		}
 	}
-	else
+	else if (selectedPanelTitle != "Terminal") // can't send messages to the terminal tab
 		_manager->Send((unsigned char*)input.data().AsChar(), input.size());
 
+	// clear the input textbox.
 	txtInput->SetValue("");
 }
 
