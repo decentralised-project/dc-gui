@@ -28,6 +28,8 @@ public:
 	~dc_gui_chatpanel();
 
 private:
+	void on_richtext_focus(wxFocusEvent& event);
+
 	wxRichTextCtrl* txtMain;
 	wxListBox* m_listBox1;
 };

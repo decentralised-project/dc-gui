@@ -266,7 +266,7 @@
                         <event name="OnMotion"></event>
                         <event name="OnMouseEvents"></event>
                         <event name="OnMouseWheel"></event>
-                        <event name="OnNotebookPageChanged"></event>
+                        <event name="OnNotebookPageChanged">on_tab_changed</event>
                         <event name="OnNotebookPageChanging"></event>
                         <event name="OnPaint"></event>
                         <event name="OnRightDClick"></event>
@@ -447,7 +447,7 @@
                                             <event name="OnRightDClick"></event>
                                             <event name="OnRightDown"></event>
                                             <event name="OnRightUp"></event>
-                                            <event name="OnSetFocus"></event>
+                                            <event name="OnSetFocus">on_richtext_focus</event>
                                             <event name="OnSize"></event>
                                             <event name="OnText"></event>
                                             <event name="OnTextEnter"></event>

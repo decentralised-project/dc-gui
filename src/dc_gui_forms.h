@@ -54,6 +54,8 @@ class MainDcForm : public wxFrame
 		virtual void on_form_close( wxCloseEvent& event ) { event.Skip(); }
 		virtual void on_login_selected( wxCommandEvent& event ) { event.Skip(); }
 		virtual void on_settings_selected( wxCommandEvent& event ) { event.Skip(); }
+		virtual void on_tab_changed( wxNotebookEvent& event ) { event.Skip(); }
+		virtual void on_richtext_focus( wxFocusEvent& event ) { event.Skip(); }
 		virtual void on_input_enter_pressed( wxCommandEvent& event ) { event.Skip(); }
 		
 	

@@ -199,3 +199,13 @@ void dc_gui_mainform::on_form_close(wxCommandEvent& event)
 	if (settings_dialog)
 		settings_dialog->Destroy();
 }
+
+void dc_gui_mainform::on_tab_changed(wxNotebookEvent& event)
+{
+	txtInput->SetFocus();
+}
+
+void dc_gui_mainform::on_richtext_focus(wxFocusEvent& event)
+{
+	txtInput->SetFocus();
+}

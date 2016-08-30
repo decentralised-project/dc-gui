@@ -68,6 +68,8 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
 	this->Connect( menuLogin->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_login_selected ) );
 	this->Connect( menuSettings->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
+	tabsMain->Connect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MainDcForm::on_tab_changed ), NULL, this );
+	txtMain->Connect( wxEVT_SET_FOCUS, wxFocusEventHandler( MainDcForm::on_richtext_focus ), NULL, this );
 	txtInput->Connect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainDcForm::on_input_enter_pressed ), NULL, this );
 }
 
@@ -77,6 +79,8 @@ MainDcForm::~MainDcForm()
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( MainDcForm::on_form_close ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_login_selected ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MainDcForm::on_settings_selected ) );
+	tabsMain->Disconnect( wxEVT_COMMAND_NOTEBOOK_PAGE_CHANGED, wxNotebookEventHandler( MainDcForm::on_tab_changed ), NULL, this );
+	txtMain->Disconnect( wxEVT_SET_FOCUS, wxFocusEventHandler( MainDcForm::on_richtext_focus ), NULL, this );
 	txtInput->Disconnect( wxEVT_COMMAND_TEXT_ENTER, wxCommandEventHandler( MainDcForm::on_input_enter_pressed ), NULL, this );
 	
 }

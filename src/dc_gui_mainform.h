@@ -69,6 +69,8 @@ private:
 	void on_settings_selected(wxCommandEvent& event);
 	void on_form_close(wxCommandEvent& event);
 	void on_input_enter_pressed(wxCommandEvent& event);
+	void on_tab_changed(wxNotebookEvent& event);
+	void on_richtext_focus(wxFocusEvent& event);
 
 	void writeToRichText(std::string txt);
 };
