@@ -14,6 +14,12 @@ namespace dccrypto
 		shared_secret_len = helper->ecdh(&shared_secret, localKeyPair, remote_public_key);
 	}
 
+	void crypt_connection::Shutdown()
+	{
+		if (shared_secret)
+			free(shared_secret);
+	}
+
 	const EC_POINT* crypt_connection::GetRemotePublicKey()
 	{
 		return remote_public_key;

@@ -57,6 +57,9 @@ namespace dccrypto
 
 		if (pkey)
 			EC_KEY_free(pkey);
+
+		ERR_free_strings();
+		CRYPTO_cleanup_all_ex_data();
 	}
 
 	void crypt_network_manager::on_log_recieved(std::string msg)

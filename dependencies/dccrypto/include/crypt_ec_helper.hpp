@@ -58,7 +58,7 @@ namespace dccrypto
 		void reverse(uint8_t *dst, size_t len);
 
 		EC_KEY *eckey;
-		EC_POINT *ecpublic_key;
+		EC_POINT *pub;
 	};
 }
 

@@ -19,10 +19,14 @@ namespace dcp2p
 
 		static pointer Create(std::string filePath, std::vector<std::string> dnsSeeds, int defaultPort)
 		{
-			return pointer(new p2p_hostmanager(filePath, dnsSeeds, defaultPort));
+			return pointer(new p2p_hostmanager(filePath, dnsSeeds, defaultPort), [=](p2p_hostmanager* inst)
+			{
+				inst->Shutdown();
+			});
 		}
 
 		p2p_host GetNextHost();
+		void Shutdown();
 
 	private:
 		p2p_hostmanager(std::string filePath, std::vector<std::string> dnsSeeds, int defaultPort);

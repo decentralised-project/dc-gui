@@ -7,6 +7,7 @@ namespace dccrypto
 	crypt_ec_helper::crypt_ec_helper()
 	{
 		eckey = NULL;
+		pub = NULL;
 	}
 
 	void crypt_ec_helper::shutdown()
@@ -14,11 +15,10 @@ namespace dccrypto
 		if (eckey)
 			EC_KEY_free(eckey);
 
-		if (ecpublic_key)
-			EC_POINT_free(ecpublic_key);
+		if (pub)
+			EC_POINT_free(pub);
 
 		EVP_cleanup();
-		ERR_free_strings();
 	}
 
 	EC_KEY* crypt_ec_helper::generate_key_pair()
@@ -40,8 +40,7 @@ namespace dccrypto
 
 	const EC_POINT* crypt_ec_helper::get_public_key(EC_KEY *keypair)
 	{
-		ecpublic_key = (EC_POINT*)EC_KEY_get0_public_key(keypair);
-		return ecpublic_key;
+		return EC_KEY_get0_public_key(keypair);
 	}
 
 	std::string crypt_ec_helper::to_base58(const EC_POINT* public_key)
@@ -145,13 +144,13 @@ namespace dccrypto
 			vch.push_back(*(it++));
 
 		EC_GROUP *ecgrp = EC_GROUP_new_by_curve_name(NID_secp256k1);
-		ecpublic_key = EC_POINT_new(ecgrp);
+		pub = EC_POINT_new(ecgrp);
 
-		size_t len = EC_POINT_oct2point(ecgrp, ecpublic_key, vch.data(), vch.size(), NULL);
+		size_t len = EC_POINT_oct2point(ecgrp, pub, vch.data(), vch.size(), NULL);
 
 		EC_GROUP_free(ecgrp);
 
-		return ecpublic_key;
+		return pub;
 	}
 
 	void crypt_ec_helper::save_key_pair(std::string path, EC_KEY *keypair)
@@ -180,6 +179,7 @@ namespace dccrypto
 
 		fclose(outfile);
 
+		EC_GROUP_free(ecgroup);
 		EVP_PKEY_free(pkey);
 		BIO_free_all(out);
 	}
@@ -209,6 +209,7 @@ namespace dccrypto
 
 		eckey = EVP_PKEY_get1_EC_KEY(pkey);
 
+		EC_GROUP_free(ecgroup);
 		EVP_PKEY_free(pkey);
 		BIO_free_all(in);
 

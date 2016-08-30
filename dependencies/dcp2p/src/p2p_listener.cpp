@@ -10,6 +10,7 @@ namespace dcp2p
 
 	void p2p_listener::Shutdown()
 	{
+		acceptor_.close();
 		_io_service.stop();
 	}
 

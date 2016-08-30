@@ -24,7 +24,10 @@ namespace dcp2p
 
 		static pointer Create(boost::asio::io_service& io_service, std::string &localId)
 		{
-			return pointer(new p2p_connection(io_service, localId));
+			return pointer(new p2p_connection(io_service, localId), [=](p2p_connection* inst)
+			{
+				inst->Shutdown();
+			});
 		}
 
 		boost::signals2::signal<void(std::string)>											Log;

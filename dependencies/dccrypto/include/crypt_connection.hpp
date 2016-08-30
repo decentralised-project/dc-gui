@@ -35,7 +35,10 @@ namespace dccrypto
 							  EC_KEY* localKeyPair,
 							  dcp2p::p2p_connection::pointer connection)
 		{
-			return pointer(new crypt_connection(helper, remotePublicKey, localKeyPair, connection));
+			return pointer(new crypt_connection(helper, remotePublicKey, localKeyPair, connection), [=](crypt_connection* inst)
+			{
+				inst->Shutdown();
+			});
 		}
 
 		const EC_POINT* GetRemotePublicKey();
@@ -43,6 +46,7 @@ namespace dccrypto
 		int Encrypt(unsigned char* cipher, unsigned char* data, size_t length);
 		int Decrypt(unsigned char* data, unsigned char* cipher, size_t length);
 		dcp2p::p2p_connection::pointer GetP2PConnection();
+		void Shutdown();
 
 	private:
 		crypt_connection(crypt_ec_helper::pointer helper, 

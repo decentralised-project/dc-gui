@@ -35,6 +35,12 @@ namespace dcp2p
 		return chosen;
 	}
 
+	void p2p_hostmanager::Shutdown()
+	{
+		_dnsSeeds.clear();
+		_hosts.clear();
+	}
+
 	std::vector<p2p_host> p2p_hostmanager::getFromFile()
 	{
 		std::vector<p2p_host> hosts;

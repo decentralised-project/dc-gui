@@ -30,6 +30,10 @@
 #include "dc_config.h"
 #include "crypt_network_manager.hpp"
 
+#ifdef __WXMSW__
+#include <wx/msw/msvcrt.h>      // redefines the new() operator 
+#endif
+
 #if WIN32
 #include "Win32/resource.h"
 #endif

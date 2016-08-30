@@ -26,7 +26,10 @@ namespace dcp2p
 
 		static pointer Create(std::string dataDirPath)
 		{
-			return pointer(new p2p_manager(dataDirPath));
+			return pointer(new p2p_manager(dataDirPath), [=](p2p_manager* inst)
+			{
+				inst->Shutdown();
+			});
 		}
 
 		boost::signals2::signal<void(std::string)>											Log;
