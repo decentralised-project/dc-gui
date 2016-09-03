@@ -40,3 +40,27 @@ void dc_gui_chatpanel::on_richtext_focus(wxFocusEvent& event)
 {
 	// TODO: focus txtInput on main form.
 }
+
+void dc_gui_chatpanel::WriteToRichText(std::string msg, wxColour col)
+{
+	if (!wxIsMainThread())
+		wxMutexGuiEnter();
+
+	txtMain->Freeze();
+
+	txtMain->SetCaretPosition(txtMain->GetLastPosition() - 1);
+	size_t before_number_of_lines = txtMain->GetNumberOfLines();
+
+	txtMain->Newline();
+	txtMain->BeginTextColour(col);
+	txtMain->WriteText(msg);
+	txtMain->EndTextColour();
+
+	size_t after_number_of_lines = txtMain->GetNumberOfLines();
+	txtMain->Thaw();
+
+	txtMain->ScrollLines(txtMain->GetNumberOfLines());
+
+	if (!wxIsMainThread())
+		wxMutexGuiLeave();
+}

@@ -73,6 +73,7 @@ private:
 	void on_richtext_focus(wxFocusEvent& event);
 
 	void writeToRichText(std::string txt);
+	void writeToPanel(std::string panelTitle, std::string txt, wxColour col);
 };
 
 #endif 

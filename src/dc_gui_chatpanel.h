@@ -27,6 +27,8 @@ public:
 					 const wxString& name = wxPanelNameStr);
 	~dc_gui_chatpanel();
 
+	void WriteToRichText(std::string msg, wxColour col);
+
 private:
 	void on_richtext_focus(wxFocusEvent& event);
 

@@ -98,6 +98,9 @@ void dc_gui_mainform::OnNodeDisconnected(std::string remoteId)
 	std::stringstream ss;
 	ss << "Disconnected: " << remoteId;
 
+	// TODO: if(connections.size() == 0)
+	writeToPanel("", "Disconnected", wxColour(0,0,127));
+
 	writeToRichText(std::string(ss.str()));
 }
 
@@ -133,6 +136,20 @@ void dc_gui_mainform::writeToRichText(std::string txt)
 
 	if (!wxIsMainThread())
 		wxMutexGuiLeave();
+}
+
+void dc_gui_mainform::writeToPanel(std::string panelTitle, std::string txt, wxColour col)
+{
+	size_t numPages = tabsMain->GetPageCount();
+	for (int i = 0; i < numPages; ++i)
+	{
+		wxString pageTitle = tabsMain->GetPageText(i);
+		if (pageTitle != "Terminal" && (pageTitle == panelTitle || panelTitle == ""))
+		{
+			dc_gui_chatpanel* page = (dc_gui_chatpanel*)tabsMain->GetPage(i);
+			page->WriteToRichText(txt, col);
+		}
+	}
 }
 
 void dc_gui_mainform::on_login_selected(wxCommandEvent& event)
