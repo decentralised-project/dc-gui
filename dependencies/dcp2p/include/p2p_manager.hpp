@@ -53,7 +53,7 @@ namespace dcp2p
 
 		std::vector<boost::shared_ptr<boost::thread>> _threads;
 		std::vector<p2p_connection::pointer> _outgoing;
-		p2p_listener::pointer _listener;
+		p2p_listener* _listener;
 		p2p_hostmanager::pointer _host_manager;
 		std::string _networkId;
 		std::string data_dir;

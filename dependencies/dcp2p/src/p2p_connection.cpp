@@ -145,7 +145,8 @@ namespace dcp2p
 					ss << "Dropped connection to self. " << socket_.remote_endpoint();
 					Log(std::string(ss.str()));
 
-					socket_.close();
+					//socket_.shutdown(boost::asio::socket_base::shutdown_both);
+					//_io_service.stop();
 					return;
 				}
 			}

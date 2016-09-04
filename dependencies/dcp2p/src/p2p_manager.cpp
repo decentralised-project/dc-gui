@@ -9,7 +9,7 @@ namespace dcp2p
 
 	void p2p_manager::Shutdown()
 	{
-		_listener->Shutdown();
+		delete _listener;
 
 		for (size_t i = 0; i < _outgoing.size(); i++)
 		{
@@ -56,9 +56,8 @@ namespace dcp2p
 
 	void p2p_manager::listener_run(int incomingPort)
 	{
-		boost::asio::io_service io;
-		_listener = p2p_listener::Create(io, incomingPort, _networkId);
-		_listener->ListenForIncoming(shared_from_this());
+//		boost::asio::io_service io;
+		_listener = new p2p_listener(incomingPort, _networkId);
 
 		std::string msg = "Listening on port ";
 
@@ -68,7 +67,7 @@ namespace dcp2p
 
 		Log(msg);
 
-		io.run();
+		_listener->ListenForIncoming(shared_from_this());
 	}
 
 	void p2p_manager::outgoing_run()
