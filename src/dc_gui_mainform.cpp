@@ -91,6 +91,50 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 	txt.append(body);
 
 	writeToRichText(txt);
+
+	unsigned char* cmd;
+	size_t cmdLength = 0;
+
+	size_t offset = 0;
+	memcpy(&cmdLength, packet.body(), sizeof(size_t));
+	offset += sizeof(size_t);
+
+	cmd = new unsigned char[cmdLength];
+
+	memcpy(cmd, packet.body() + offset, cmdLength);
+	offset += cmdLength;
+
+	if (std::string(cmd, cmd + cmdLength) == "MSG")
+	{
+		unsigned char* channel;
+		size_t channelLength = 0;
+
+		unsigned char* msg;
+		size_t msgLength = 0;
+
+		memcpy(&channelLength, packet.body() + offset, sizeof(size_t));
+		offset += sizeof(size_t);
+
+		channel = new unsigned char[channelLength];
+
+		memcpy(channel, packet.body() + offset, channelLength);
+		offset += channelLength;
+
+		memcpy(&msgLength, packet.body() + offset, sizeof(size_t));
+		offset += sizeof(size_t);
+
+		msg = new unsigned char[msgLength];
+
+		memcpy(msg, packet.body() + offset, msgLength);
+		offset += msgLength;
+
+		writeToPanel(std::string(channel, channel + channelLength), std::string(msg, msg + msgLength), wxColour(0,0,0));
+
+		free(msg);
+		free(channel);
+	}
+
+	free(cmd);
 }
 
 void dc_gui_mainform::OnNodeDisconnected(std::string remoteId)
@@ -199,7 +243,33 @@ void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 		}
 	}
 	else if (selectedPanelTitle != "Terminal") // can't send messages to the terminal tab
-		_manager->Send((unsigned char*)input.data().AsChar(), input.size());
+	{
+		// SIZE - CMD - SIZE - CHANNEL - SIZE - INPUT
+
+		std::string cmd = "MSG";
+		unsigned char* packet = new unsigned char[sizeof(size_t) + cmd.size() + sizeof(size_t) + selectedPanelTitle.size() + sizeof(size_t) + input.size()];
+		size_t offset = 0;
+		memcpy(packet, std::to_string(cmd.size()).c_str(), sizeof(size_t));
+		offset += sizeof(size_t);
+
+		memcpy(packet + offset, cmd.c_str(), cmd.size());
+		offset += cmd.size();
+
+		memcpy(packet + offset, std::to_string(selectedPanelTitle.size()).c_str(), sizeof(size_t));
+		offset += sizeof(size_t);
+
+		memcpy(packet + offset, selectedPanelTitle.c_str(), selectedPanelTitle.size());
+		offset += selectedPanelTitle.size();
+
+		memcpy(packet + offset, std::to_string(input.size()).c_str(), sizeof(size_t));
+		offset += sizeof(size_t);
+
+		memcpy(packet + offset, input.data().AsChar(), input.Length());
+		offset += input.Length();
+
+		_manager->Send(packet, offset);
+		free(packet);
+	}
 
 	// clear the input textbox.
 	txtInput->SetValue("");
