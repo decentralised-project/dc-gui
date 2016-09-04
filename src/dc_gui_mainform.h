@@ -58,6 +58,7 @@ private:
 	dc_config::pointer config;
 	std::string data_dir;
 	int incoming_port;
+	std::string logged_in_name;
 
 	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, std::string remoteId);
 	void OnLog(std::string msg);

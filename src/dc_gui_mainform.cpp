@@ -6,6 +6,7 @@ dc_gui_mainform::dc_gui_mainform(wxWindow* parent, wxWindowID id, const wxString
 	login_dialog = NULL;
 	settings_dialog = NULL;
 	incoming_port = 6453;
+	logged_in_name = "";
 }
 
 dc_gui_mainform::~dc_gui_mainform()
@@ -109,6 +110,9 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 		unsigned char* channel;
 		size_t channelLength = 0;
 
+		unsigned char* name;
+		size_t nameLength = 0;
+
 		unsigned char* msg;
 		size_t msgLength = 0;
 
@@ -120,6 +124,14 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 		memcpy(channel, packet.body() + offset, channelLength);
 		offset += channelLength;
 
+		memcpy(&nameLength, packet.body() + offset, sizeof(size_t));
+		offset += sizeof(size_t);
+
+		name = new unsigned char[nameLength];
+
+		memcpy(name, packet.body() + offset, nameLength);
+		offset += nameLength;
+
 		memcpy(&msgLength, packet.body() + offset, sizeof(size_t));
 		offset += sizeof(size_t);
 
@@ -128,9 +140,10 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 		memcpy(msg, packet.body() + offset, msgLength);
 		offset += msgLength;
 
-		writeToPanel(std::string(channel, channel + channelLength), std::string(msg, msg + msgLength), wxColour(0,0,0));
+		writeToPanel(std::string(channel, channel + channelLength), std::string(name, name + nameLength).append(": ").append(std::string(msg, msg + msgLength)), wxColour(0, 0, 0));
 
 		free(msg);
+		free(name);
 		free(channel);
 	}
 
@@ -150,7 +163,8 @@ void dc_gui_mainform::OnNodeDisconnected(std::string remoteId)
 
 void dc_gui_mainform::OnLoginClicked(std::string name)
 {
-	writeToRichText(std::string("Connecting as ").append(name));
+	logged_in_name = name;
+	writeToRichText(std::string("Connecting as ").append(logged_in_name));
 
 	_manager = crypt_network_manager::Create(data_dir);
 	_manager->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));
@@ -263,6 +277,13 @@ void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 
 		memcpy(packet + offset, selectedPanelTitle.c_str(), channelSize);
 		offset += channelSize;
+
+		size_t nameSize = logged_in_name.size();
+		memcpy(packet + offset, &nameSize, sizeof(size_t));
+		offset += sizeof(size_t);
+
+		memcpy(packet + offset, logged_in_name.c_str(), nameSize);
+		offset += nameSize;
 
 		size_t inputSize = input.Length();
 		memcpy(packet + offset, &inputSize, sizeof(size_t));
