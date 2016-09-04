@@ -261,7 +261,7 @@ void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 		// SIZE - CMD - SIZE - CHANNEL - SIZE - INPUT
 
 		std::string cmd = "MSG";
-		unsigned char* packet = new unsigned char[sizeof(size_t) + cmd.size() + sizeof(size_t) + selectedPanelTitle.size() + sizeof(size_t) + input.size()];
+		unsigned char* packet = new unsigned char[sizeof(size_t) + cmd.size() + sizeof(size_t) + selectedPanelTitle.size() + sizeof(size_t) + logged_in_name.size() + sizeof(size_t) + input.size()];
 		size_t offset = 0;
 
 		size_t cmdSize = cmd.size();
