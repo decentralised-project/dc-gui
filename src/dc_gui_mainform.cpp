@@ -249,23 +249,27 @@ void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 		std::string cmd = "MSG";
 		unsigned char* packet = new unsigned char[sizeof(size_t) + cmd.size() + sizeof(size_t) + selectedPanelTitle.size() + sizeof(size_t) + input.size()];
 		size_t offset = 0;
-		memcpy(packet, std::to_string(cmd.size()).c_str(), sizeof(size_t));
+
+		size_t cmdSize = cmd.size();
+		memcpy(packet, &cmdSize, sizeof(size_t));
 		offset += sizeof(size_t);
 
-		memcpy(packet + offset, cmd.c_str(), cmd.size());
-		offset += cmd.size();
+		memcpy(packet + offset, cmd.c_str(), cmdSize);
+		offset += cmdSize;
 
-		memcpy(packet + offset, std::to_string(selectedPanelTitle.size()).c_str(), sizeof(size_t));
+		size_t channelSize = selectedPanelTitle.size();
+		memcpy(packet + offset, &channelSize, sizeof(size_t));
 		offset += sizeof(size_t);
 
-		memcpy(packet + offset, selectedPanelTitle.c_str(), selectedPanelTitle.size());
-		offset += selectedPanelTitle.size();
+		memcpy(packet + offset, selectedPanelTitle.c_str(), channelSize);
+		offset += channelSize;
 
-		memcpy(packet + offset, std::to_string(input.size()).c_str(), sizeof(size_t));
+		size_t inputSize = input.Length();
+		memcpy(packet + offset, &inputSize, sizeof(size_t));
 		offset += sizeof(size_t);
 
-		memcpy(packet + offset, input.data().AsChar(), input.Length());
-		offset += input.Length();
+		memcpy(packet + offset, input.data().AsChar(), inputSize);
+		offset += inputSize;
 
 		_manager->Send(packet, offset);
 		free(packet);
