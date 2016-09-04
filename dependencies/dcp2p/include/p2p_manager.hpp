@@ -43,6 +43,7 @@ namespace dcp2p
 		void on_node_disconnected(std::string remoteId);
 
 		void Run(int incomingPort, std::string uniqueSessionId);		
+		void StoreConnection(p2p_connection::pointer connection);
 		void Shutdown();
 
 	private:
@@ -52,7 +53,7 @@ namespace dcp2p
 		void outgoing_run();
 
 		std::vector<boost::shared_ptr<boost::thread>> _threads;
-		std::vector<p2p_connection::pointer> _outgoing;
+		std::vector<p2p_connection::pointer> _connections;
 		p2p_listener* _listener;
 		p2p_hostmanager::pointer _host_manager;
 		std::string _networkId;

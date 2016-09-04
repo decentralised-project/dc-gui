@@ -11,17 +11,22 @@ namespace dcp2p
 	{
 		delete _listener;
 
-		for (size_t i = 0; i < _outgoing.size(); i++)
+		for (size_t i = 0; i < _connections.size(); i++)
 		{
-			_outgoing[i]->Shutdown();
+			_connections[i]->Shutdown();
 		}
-		_outgoing.clear();
+		_connections.clear();
 
 		for (size_t i = 0; i < _threads.size(); i++)
 		{
 			_threads[i]->interrupt();
 			_threads[i]->join();
 		}
+	}
+
+	void p2p_manager::StoreConnection(p2p_connection::pointer connection)
+	{
+		_connections.push_back(connection);
 	}
 
 	void p2p_manager::Run(int incomingPort, std::string uniqueSessionId)
@@ -94,13 +99,13 @@ namespace dcp2p
 
 		// outgoing connection
 		p2p_connection::pointer new_connection = p2p_connection::Create(io, _networkId);
+		StoreConnection(new_connection);
+
 		new_connection->Log.connect(boost::bind(&p2p_manager::on_log_recieved, this, _1));
 		new_connection->NodeConnected.connect(boost::bind(&p2p_manager::on_node_connected, this, _1, _2, _3));
 		new_connection->ReceivedData.connect(boost::bind(&p2p_manager::on_data_recieved, this, _1, _2));
 		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, this, _1));
 		new_connection->Connect(chosen.GetIp(), chosen.GetPort());
-
-		_outgoing.push_back(new_connection);
 
 		io.run();
 	}

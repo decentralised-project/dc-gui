@@ -35,6 +35,7 @@ namespace dcp2p
 	{
 		if (!error)
 		{
+			manager_->StoreConnection(new_connection);
 			new_connection->Start();
 			ListenForIncoming(manager_);
 		}
