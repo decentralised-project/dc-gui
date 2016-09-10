@@ -116,8 +116,9 @@ namespace dccrypto
 		while (*psz && !isspace(*psz)) {
 			// Decode base58 character
 			const char* ch = strchr(pszBase58, *psz);
-			if (ch == NULL)
-				return false;
+			if (ch == NULL)	
+				return NULL;
+
 			// Apply "b256 = b256 * 58 + ch".
 			int carry = ch - pszBase58;
 			for (std::vector<unsigned char>::reverse_iterator it = b256.rbegin(); it != b256.rend(); it++) {
@@ -132,7 +133,8 @@ namespace dccrypto
 		while (isspace(*psz))
 			psz++;
 		if (*psz != 0)
-			return false;
+			return NULL;
+
 		// Skip leading zeroes in b256.
 		std::vector<unsigned char>::iterator it = b256.begin();
 		while (it != b256.end() && *it == 0)
@@ -332,67 +334,5 @@ namespace dccrypto
 		EVP_CIPHER_CTX_free(ctx);
 
 		return plaintext_len;
-	}
-
-	// Credit: https://github.com/keeshux
-	// ↓↓↓↓ Based on code from https://github.com/keeshux/basic-blockchain-programming/blob/master/base58.h
-
-	static const char base58_alphabet[] = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-
-	char* crypt_ec_helper::base58(const uint8_t *bytes, size_t len)
-	{
-		size_t str_len;
-		char *str;
-		BN_CTX *ctx;
-		BIGNUM base, x, r;
-		int i, j;
-
-		str_len = len * 138 / 100 + 2;
-		str = (char*)calloc(str_len, sizeof(char));
-
-		ctx = BN_CTX_new();
-		BN_CTX_start(ctx);
-
-		BN_init(&base);
-		BN_init(&x);
-		BN_init(&r);
-		BN_set_word(&base, 58);
-		BN_bin2bn(bytes, len, &x);
-
-		i = 0;
-		while (!BN_is_zero(&x)) {
-			BN_div(&x, &r, &x, &base, ctx);
-			str[i] = base58_alphabet[BN_get_word(&r)];
-			++i;
-		}
-		for (j = 0; j < len; ++j) {
-			if (bytes[j] != 0x00) {
-				break;
-			}
-			str[i] = base58_alphabet[0];
-			++i;
-		}
-		reverse((uint8_t *)str, i);
-
-		BN_clear_free(&r);
-		BN_clear_free(&x);
-		BN_free(&base);
-		BN_CTX_end(ctx);
-		BN_CTX_free(ctx);
-
-		return str;
-	}
-
-	void crypt_ec_helper::reverse(uint8_t *dst, size_t len)
-	{
-		size_t i;
-		const size_t stop = len >> 1;
-		for (i = 0; i < stop; ++i) {
-			uint8_t *left = dst + i;
-			uint8_t *right = dst + len - i - 1;
-			const uint8_t tmp = *left;
-			*left = *right;
-			*right = tmp;
-		}
 	}
 }

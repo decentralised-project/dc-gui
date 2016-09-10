@@ -7,7 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <string>
+#include <string.h>
 #include <memory>
 
 #include <openssl/bn.h>
@@ -18,6 +18,7 @@
 #include <openssl/bio.h>
 #include <openssl/err.h>
 #include <openssl/pem.h>
+#include <openssl/ossl_typ.h>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
@@ -53,9 +54,6 @@ namespace dccrypto
 
 	private:
 		crypt_ec_helper();
-
-		char* base58(const uint8_t *bytes, size_t len);
-		void reverse(uint8_t *dst, size_t len);
 
 		EC_KEY *eckey;
 		EC_POINT *pub;
