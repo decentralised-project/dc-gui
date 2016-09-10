@@ -12,11 +12,7 @@ class dc_gui_app : public wxApp
 public:
 	virtual bool OnInit();
 private:
-	wxDECLARE_EVENT_TABLE();
 };
-
-wxBEGIN_EVENT_TABLE(dc_gui_app, wxApp)
-wxEND_EVENT_TABLE()
 
 IMPLEMENT_APP(dc_gui_app)
 
