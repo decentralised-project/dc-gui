@@ -150,7 +150,7 @@ LoginDialog::LoginDialog( wxWindow* parent, wxWindowID id, const wxString& title
 	bSizer9->Add( m_staticText5, 9, wxALIGN_BOTTOM|wxALL, 5 );
 	
 	m_button2 = new wxButton( pnlCreate, wxID_ANY, wxT("Generate"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_button2, 1, wxALIGN_BOTTOM|wxALIGN_RIGHT|wxALL, 2 );
+	bSizer9->Add( m_button2, 1, wxALIGN_BOTTOM|wxALL, 2 );
 	
 	
 	bSizer7->Add( bSizer9, 1, 0, 5 );
@@ -257,7 +257,7 @@ SettingsDialog::SettingsDialog( wxWindow* parent, wxWindowID id, const wxString&
 	bSizer9->Add( m_notebook2, 1, wxEXPAND | wxALL, 5 );
 	
 	m_button4 = new wxButton( this, wxID_ANY, wxT("Save"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer9->Add( m_button4, 0, wxALIGN_RIGHT|wxALL, 5 );
+	bSizer9->Add( m_button4, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	
 	this->SetSizer( bSizer9 );
