@@ -26,7 +26,7 @@ void dc_gui_mainform::Init()
 	SetIcon(wxICON(IDI_ICON1));
 #endif
 
-	txtMain->BeginTextColour(wxColour(0, 90, 0, 0));
+	txtMain->BeginTextColour(wxColour(0, 90, 0, 255));
 	txtMain->WriteText("Decentralised GUI v1.0.0");
 	txtMain->EndTextColour();
 
