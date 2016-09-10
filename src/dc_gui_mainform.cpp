@@ -258,7 +258,7 @@ void dc_gui_mainform::on_input_enter_pressed(wxCommandEvent& event)
 	}
 	else if (selectedPanelTitle != "Terminal") // can't send messages to the terminal tab
 	{
-		// SIZE - CMD - SIZE - CHANNEL - SIZE - INPUT
+		// SIZE - CMD - SIZE - CHANNEL - SIZE - USERNAME - SIZE - INPUT
 
 		std::string cmd = "MSG";
 		unsigned char* packet = new unsigned char[sizeof(size_t) + cmd.size() + sizeof(size_t) + selectedPanelTitle.size() + sizeof(size_t) + logged_in_name.size() + sizeof(size_t) + input.size()];

@@ -28,6 +28,7 @@ namespace dcp2p
 
 	void p2p_connection::Shutdown()
 	{
+		Log("shutting down connection");
 		socket_.cancel();
 		socket_.shutdown(boost::asio::socket_base::shutdown_type::shutdown_both);
 		_io_service.stop();
