@@ -55,7 +55,7 @@ MainDcForm::MainDcForm( wxWindow* parent, wxWindowID id, const wxString& title, 
 	
 	bSizer1->Add( tabsMain, 1, wxEXPAND | wxALL, 0 );
 	
-	txtInput = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	txtInput = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER );
 	bSizer1->Add( txtInput, 0, wxALL|wxEXPAND, 0 );
 	
 	
