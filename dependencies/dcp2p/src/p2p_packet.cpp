@@ -47,7 +47,7 @@ namespace dcp2p
 	bool p2p_packet::decode_header()
 	{
 		char header[header_length + 1] = "";
-		std::strncat(header, data_, header_length);
+		strncat(header, data_, header_length);
 		body_length_ = std::atoi(header);
 		if (body_length_ > max_body_length)
 		{

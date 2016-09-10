@@ -38,6 +38,16 @@ link_directories(
 
 ADD_LIBRARY( dcp2p STATIC ${ROOT_HEADERS} ${ROOT_SRC} )
 
+target_link_libraries( dcp2p 
+	debug ${Boost_SYSTEM_LIBRARY_DEBUG} optimized ${Boost_SYSTEM_LIBRARY_RELEASE}
+	debug ${Boost_DATE_TIME_LIBRARY_DEBUG} optimized ${Boost_DATE_TIME_LIBRARY_RELEASE}
+	debug ${Boost_REGEX_LIBRARY_DEBUG} optimized ${Boost_REGEX_LIBRARY_RELEASE}
+	debug ${Boost_THREAD_LIBRARY_DEBUG} optimized ${Boost_THREAD_LIBRARY_RELEASE}
+	debug ${Boost_CHRONO_LIBRARY_DEBUG} optimized ${Boost_CHRONO_LIBRARY_RELEASE}
+	debug ${Boost_SIGNALS_LIBRARY_DEBUG} optimized ${Boost_SIGNALS_LIBRARY_RELEASE}
+	debug ${Boost_FILESYSTEM_LIBRARY_DEBUG} optimized ${Boost_FILESYSTEM_LIBRARY_RELEASE}
+ )
+
 SET_TARGET_PROPERTIES( dcp2p PROPERTIES LIBRARY_OUTPUT_NAME dcp2p ARCHIVE_OUTPUT_NAME dcp2p )
 
 if ( MSVC )

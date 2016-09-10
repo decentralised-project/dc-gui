@@ -1,7 +1,8 @@
 #ifndef __P2P_PACKET_H_INCLUDED__
 #define __P2P_PACKET_H_INCLUDED__
 
-#include <string>
+#include <string.h>
+#include <stdio.h>
 #include <vector>
 #include <iostream>
 

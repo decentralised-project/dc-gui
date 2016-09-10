@@ -26,6 +26,14 @@ else()
     SET(WXW_VERSION "3.1")
 endif()
 
+if(WIN32)
+    SET(DC_P2P "dcp2p")
+    SET(DC_CRYPTO "dccrypto")
+else()
+    SET(DC_P2P "libdcp2p.a")
+    SET(DC_CRYPTO "libdccrypto.a")
+endif()
+
 set( wxWidgets_CONFIGURATION mswu )
 set( wxWidgets_USE_STATIC ON )
 set( WXWIDGETS_USE_DEBUG ON )
@@ -50,6 +58,8 @@ SET(PROJECT_LIBRARIES
 	dcp2p
 	dccrypto
 	${LIB_EAY_RELEASE}
+	${OPENSSL_SSL_LIBRARY}
+	${OPENSSL_CRYPTO_LIBRARY}
 )
 
 # Set up application resource files for Windows
@@ -79,6 +89,7 @@ include_directories(
 
 link_directories( 
 	"${CMAKE_SOURCE_DIR}/build/libs"
+	"${CMAKE_SOURCE_DIR}/build"
 	${Boost_LIBRARY_DIR}
 	${wxWidgets_LIB_DIR}
 )
