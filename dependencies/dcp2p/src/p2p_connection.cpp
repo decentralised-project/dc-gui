@@ -36,28 +36,33 @@ namespace dcp2p
 
 	void p2p_connection::Connect(std::string host, int port)
 	{
-		// outgoing cycle
-		std::stringstream ss;
-		ss << port;
+		// --- outgoing cycle
 
+		// get the target port number as a string
+		std::stringstream portStr;
+		portStr << port;
+
+		// get an endpoint to connect to
 		tcp::resolver resolver(_io_service);
-		tcp::resolver::query query(tcp::v4(), host.c_str(), ss.str());
+		tcp::resolver::query query(tcp::v4(), host.c_str(), portStr.str());
 		tcp::resolver::iterator iterator = resolver.resolve(query);
 
+		// try to make a connection. This is blocking for up to about 20 secs
 		try
 		{
 			boost::asio::connect(socket_, iterator);
 		}
 		catch (std::exception const &ex) {
+
 			// there was an error connecting, so log it and exit the method, so we can try again.
 			Log(ex.what());
 			return;
 		}
 
-		std::stringstream id_stream;
-		id_stream << _localId;
+		// we've connected, so add our public key to the send queue to introduce ourselves.
+		Send(_localId);
 
-		Send(std::string(id_stream.str()));
+		// send the packet at the front of the queue.
 		boost::asio::async_write(socket_,
 			boost::asio::buffer(write_queue_.front().data(),
 			write_queue_.front().length()),
@@ -120,10 +125,11 @@ namespace dcp2p
 			// if this is a single byte ping packet, ping back, or just ignore if it's a reply.
 			if (packet_.body_length() == 1)
 			{
-				if (packet_.body()[0] == 0)
+				unsigned char ping = packet_.body()[0];
+				if (ping == 0)
 				{
 					unsigned char ping[1];
-					ping[0] = 0;
+					ping[0] = 1;
 					Send(ping, 1);
 				}
 			}
