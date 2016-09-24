@@ -19,35 +19,28 @@
 
 namespace dcp2p
 {
-	class p2p_manager : public boost::enable_shared_from_this<p2p_manager>
+	class p2p_manager
 	{
 	public:
-		typedef boost::shared_ptr<p2p_manager> pointer;
 
-		static pointer Create(std::string dataDirPath)
-		{
-			return pointer(new p2p_manager(dataDirPath), [=](p2p_manager* inst)
-			{
-				inst->Shutdown();
-			});
-		}
+		p2p_manager(std::string dataDirPath);
+		~p2p_manager();
 
 		boost::signals2::signal<void(std::string)>											Log;
 		boost::signals2::signal<void(bool, p2p_connection::pointer, std::string)>			NodeConnected;
 		boost::signals2::signal<void(p2p_connection::pointer, p2p_packet)>					DataReceived;
-		boost::signals2::signal<void(std::string)>											NodeDisconnected;
+		boost::signals2::signal<void(std::string, std::string)>								NodeDisconnected;
 
 		void on_node_connected(bool isIncoming, p2p_connection::pointer connection, std::string remoteId);
 		void on_log_recieved(std::string msg);
 		void on_data_recieved(p2p_connection::pointer connection, p2p_packet packet);
-		void on_node_disconnected(std::string remoteId);
+		void on_node_disconnected(std::string remoteId, std::string error);
 
 		void Run(int incomingPort, std::string uniqueSessionId);		
 		void StoreConnection(p2p_connection::pointer connection);
 		void Shutdown();
 
 	private:
-		p2p_manager(std::string dataDirPath);
 
 		void listener_run(int incomingPort);
 		void outgoing_run();

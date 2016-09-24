@@ -63,7 +63,7 @@ private:
 	void OnNodeConnected(bool isIncoming, p2p_connection::pointer connection, std::string remoteId);
 	void OnLog(std::string msg);
 	void OnDataReceived(p2p_connection::pointer connection, p2p_packet packet);
-	void OnNodeDisconnected(std::string remoteId);
+	void OnNodeDisconnected(std::string remoteId, std::string error);
 	void OnLoginClicked(std::string name);
 
 	void on_login_selected(wxCommandEvent& event);

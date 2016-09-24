@@ -7,6 +7,7 @@ namespace dccrypto
 		data_path = dataDirPath;
 		pkey = NULL;
 		helper = crypt_ec_helper::Create();
+		_manager = NULL;
 	}
 
 	void crypt_network_manager::Run(int incomingPort, std::string name)
@@ -16,12 +17,12 @@ namespace dccrypto
 
 		Log(std::string("Public key is ").append(publickey));
 
-		manager = dcp2p::p2p_manager::Create(data_path);
-		manager->Log.connect(boost::bind(&crypt_network_manager::on_log_recieved, this, _1));
-		manager->NodeConnected.connect(boost::bind(&crypt_network_manager::on_node_connected, this, _1, _2, _3));
-		manager->DataReceived.connect(boost::bind(&crypt_network_manager::on_data_recieved, this, _1, _2));
-		manager->NodeDisconnected.connect(boost::bind(&crypt_network_manager::on_node_disconnected, this, _1));
-		manager->Run(incomingPort, publickey);
+		_manager = new dcp2p::p2p_manager(data_path);
+		_manager->Log.connect(boost::bind(&crypt_network_manager::on_log_recieved, this, _1));
+		_manager->NodeConnected.connect(boost::bind(&crypt_network_manager::on_node_connected, this, _1, _2, _3));
+		_manager->DataReceived.connect(boost::bind(&crypt_network_manager::on_data_recieved, this, _1, _2));
+		_manager->NodeDisconnected.connect(boost::bind(&crypt_network_manager::on_node_disconnected, this, _1, _2));
+		_manager->Run(incomingPort, publickey);
 	}
 
 	void crypt_network_manager::Send(std::string remoteId, unsigned char* data, size_t length)
@@ -52,8 +53,8 @@ namespace dccrypto
 
 	void crypt_network_manager::Shutdown()
 	{
-		if (manager)
-			manager->Shutdown();	
+		if (_manager)
+			delete _manager;	
 
 		if (pkey)
 			EC_KEY_free(pkey);
@@ -94,8 +95,8 @@ namespace dccrypto
 		DataReceived(connection, packet);
 	}
 
-	void crypt_network_manager::on_node_disconnected(std::string remoteId)
+	void crypt_network_manager::on_node_disconnected(std::string remoteId, std::string error)
 	{
-		NodeDisconnected(remoteId);
+		NodeDisconnected(remoteId, error);
 	}
 }

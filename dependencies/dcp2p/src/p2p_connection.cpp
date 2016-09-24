@@ -101,7 +101,10 @@ namespace dcp2p
 		{
 			// we got disconnected or sumfin
 			if (_remoteId != "")
-				NodeDisconnected(_remoteId);
+				if (error)
+					NodeDisconnected(_remoteId, std::string("(handle_read_header) ").append(error.message()));
+				else
+					NodeDisconnected(_remoteId, "(handle_read_header) no error");
 		}
 	}
 
@@ -179,7 +182,10 @@ namespace dcp2p
 		else
 		{
 			// we got disconnected or sumfin
-			NodeDisconnected(_remoteId);
+			if (error)
+				NodeDisconnected(_remoteId, std::string("(handle_read_body) ").append(error.message()));
+			else
+				NodeDisconnected(_remoteId, "(handle_read_body) no error");
 		}
 	}
 
@@ -197,7 +203,10 @@ namespace dcp2p
 		else
 		{
 			// we got disconnected or sumfin
-			NodeDisconnected(_remoteId);
+			if (error)
+				NodeDisconnected(_remoteId, std::string("(handle_write) ").append(error.message()));
+			else
+				NodeDisconnected(_remoteId, "(handle_write) no error");
 		}
 	}
 }

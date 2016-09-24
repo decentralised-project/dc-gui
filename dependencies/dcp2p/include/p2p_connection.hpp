@@ -2,6 +2,7 @@
 #define __P2P_CONNECTION_H_INCLUDED__
 
 #include <deque>
+#include <mutex>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp> 
 #include <boost/shared_ptr.hpp>
@@ -33,7 +34,7 @@ namespace dcp2p
 		boost::signals2::signal<void(std::string)>											Log;
 		boost::signals2::signal<void(bool, p2p_connection::pointer, std::string)>			NodeConnected;
 		boost::signals2::signal<void(p2p_connection::pointer, p2p_packet)>					ReceivedData;
-		boost::signals2::signal<void(std::string)>											NodeDisconnected;
+		boost::signals2::signal<void(std::string, std::string)>								NodeDisconnected;
 		tcp::socket& Socket();
 
 		void Start();
@@ -62,6 +63,7 @@ namespace dcp2p
 		std::string &_localId;
 		std::string _remoteId;
 		bool isIncoming_;
+		std::mutex queueLock;
 	};
 }
 

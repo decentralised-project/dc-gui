@@ -7,7 +7,7 @@ namespace dcp2p
 		data_dir = dataDirPath;
 	}
 
-	void p2p_manager::Shutdown()
+	p2p_manager::~p2p_manager()
 	{
 		delete _listener;
 
@@ -72,7 +72,7 @@ namespace dcp2p
 
 		Log(msg);
 
-		_listener->ListenForIncoming(shared_from_this());
+		_listener->ListenForIncoming((p2p_manager*)this);
 	}
 
 	void p2p_manager::outgoing_run()
@@ -104,7 +104,7 @@ namespace dcp2p
 		new_connection->Log.connect(boost::bind(&p2p_manager::on_log_recieved, this, _1));
 		new_connection->NodeConnected.connect(boost::bind(&p2p_manager::on_node_connected, this, _1, _2, _3));
 		new_connection->ReceivedData.connect(boost::bind(&p2p_manager::on_data_recieved, this, _1, _2));
-		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, this, _1));
+		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, this, _1, _2));
 		new_connection->Connect(chosen.GetIp(), chosen.GetPort());
 
 		io.run();
@@ -125,8 +125,8 @@ namespace dcp2p
 		DataReceived(connection, packet);
 	}
 
-	void p2p_manager::on_node_disconnected(std::string remoteId)
+	void p2p_manager::on_node_disconnected(std::string remoteId, std::string error)
 	{
-		NodeDisconnected(remoteId);
+		NodeDisconnected(remoteId, error);
 	}
 }

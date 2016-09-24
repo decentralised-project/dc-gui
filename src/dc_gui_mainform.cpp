@@ -150,10 +150,10 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 	free(cmd);
 }
 
-void dc_gui_mainform::OnNodeDisconnected(std::string remoteId)
+void dc_gui_mainform::OnNodeDisconnected(std::string remoteId, std::string error)
 {
 	std::stringstream ss;
-	ss << "Disconnected: " << remoteId;
+	ss << "Disconnected: " << remoteId << " - " << error;
 
 	// TODO: if(connections.size() == 0)
 	writeToPanel("", "Disconnected", wxColour(0,0,127));
@@ -170,7 +170,7 @@ void dc_gui_mainform::OnLoginClicked(std::string name)
 	_manager->Log.connect(boost::bind(&dc_gui_mainform::OnLog, this, _1));
 	_manager->NodeConnected.connect(boost::bind(&dc_gui_mainform::OnNodeConnected, this, _1, _2, _3));
 	_manager->DataReceived.connect(boost::bind(&dc_gui_mainform::OnDataReceived, this, _1, _2));
-	_manager->NodeDisconnected.connect(boost::bind(&dc_gui_mainform::OnNodeDisconnected, this, _1));
+	_manager->NodeDisconnected.connect(boost::bind(&dc_gui_mainform::OnNodeDisconnected, this, _1, _2));
 	_manager->Run(incoming_port, name);
 }
 

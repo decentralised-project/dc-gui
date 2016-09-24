@@ -42,7 +42,7 @@ namespace dccrypto
 		boost::signals2::signal<void(std::string)>													Log;
 		boost::signals2::signal<void(bool, dcp2p::p2p_connection::pointer, std::string)>			NodeConnected;
 		boost::signals2::signal<void(dcp2p::p2p_connection::pointer, dcp2p::p2p_packet)>			DataReceived;
-		boost::signals2::signal<void(std::string)>													NodeDisconnected;
+		boost::signals2::signal<void(std::string, std::string)>										NodeDisconnected;
 
 		void Run(int incomingPort, std::string username);
 		void Send(unsigned char* data, size_t length);
@@ -55,9 +55,9 @@ namespace dccrypto
 		void on_node_connected(bool isIncoming, dcp2p::p2p_connection::pointer connection, std::string remoteId);
 		void on_log_recieved(std::string msg);
 		void on_data_recieved(dcp2p::p2p_connection::pointer connection, dcp2p::p2p_packet packet);
-		void on_node_disconnected(std::string remoteId);
+		void on_node_disconnected(std::string remoteId, std::string error);
 
-		dcp2p::p2p_manager::pointer manager;
+		dcp2p::p2p_manager* _manager;
 		crypt_ec_helper::pointer helper;
 		std::string data_path;
 		EC_KEY* pkey;

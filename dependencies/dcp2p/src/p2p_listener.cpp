@@ -14,15 +14,15 @@ namespace dcp2p
 		io_service_.stop();
 	}
 
-	void p2p_listener::ListenForIncoming(boost::shared_ptr<p2p_manager> manager)
+	void p2p_listener::ListenForIncoming(p2p_manager* manager)
 	{
-		manager_ = manager;
+		_manager = manager;
 
 		p2p_connection::pointer new_connection = p2p_connection::Create(io_service_, _localId);
-		new_connection->NodeConnected.connect(boost::bind(&p2p_manager::on_node_connected, manager_, _1, _2, _3));
-		new_connection->Log.connect(boost::bind(&p2p_manager::on_log_recieved, manager_, _1));
-		new_connection->ReceivedData.connect(boost::bind(&p2p_manager::on_data_recieved, manager_, _1, _2));
-		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, manager_, _1));
+		new_connection->NodeConnected.connect(boost::bind(&p2p_manager::on_node_connected, _manager, _1, _2, _3));
+		new_connection->Log.connect(boost::bind(&p2p_manager::on_log_recieved, _manager, _1));
+		new_connection->ReceivedData.connect(boost::bind(&p2p_manager::on_data_recieved, _manager, _1, _2));
+		new_connection->NodeDisconnected.connect(boost::bind(&p2p_manager::on_node_disconnected, _manager, _1, _2));
 
 		acceptor_.async_accept(new_connection->Socket(),
 			boost::bind(&p2p_listener::handle_accept, this, new_connection,
@@ -35,9 +35,9 @@ namespace dcp2p
 	{
 		if (!error)
 		{
-			manager_->StoreConnection(new_connection);
+			_manager->StoreConnection(new_connection);
 			new_connection->Start();
-			ListenForIncoming(manager_);
+			ListenForIncoming(_manager);
 		}
 	}
 }

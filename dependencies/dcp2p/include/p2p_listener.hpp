@@ -26,7 +26,7 @@ namespace dcp2p
 		p2p_listener(int incomingPort, std::string &localId);
 		~p2p_listener();
 
-		void ListenForIncoming(boost::shared_ptr<p2p_manager> manager);
+		void ListenForIncoming(p2p_manager* manager);
 
 	private:
 		void handle_accept(p2p_connection::pointer new_connection, const boost::system::error_code& error);
@@ -34,7 +34,7 @@ namespace dcp2p
 		boost::asio::io_service io_service_;
 		tcp::acceptor acceptor_;
 		std::string &_localId;
-		boost::shared_ptr<p2p_manager> manager_;
+		p2p_manager* _manager;
 	};
 }
 
