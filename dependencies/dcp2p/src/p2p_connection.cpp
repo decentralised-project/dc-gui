@@ -114,7 +114,7 @@ namespace dcp2p
 	{
 		if (!error)
 		{
-			// if this is a single byte ping packet, ping back and return, or just return if it's a reply.
+			// if this is a single byte ping packet, ping back, or just ignore if it's a reply.
 			if (packet_.body_length() == 1)
 			{
 				if (packet_.body()[0] == 0)
@@ -160,6 +160,9 @@ namespace dcp2p
 
 			if (write_queue_.empty())
 			{
+				// todo: this would be better if it continually checked for 3 secs if theres any queued outgoing,
+				// if any appear, it continues, if not, it pings 
+				// (or else we have to wait until the next round to send) up to 3 secs of potential lag with thread::sleep method
 				boost::this_thread::sleep(boost::posix_time::milliseconds(3000));
 
 				unsigned char ping[1];
