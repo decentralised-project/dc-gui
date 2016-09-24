@@ -115,3 +115,6 @@ endif()
 add_custom_command(TARGET dcgui POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/deploy $<TARGET_FILE_DIR:dcgui>)
+
+install (TARGETS dcgui DESTINATION bin)
+
