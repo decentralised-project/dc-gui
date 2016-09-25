@@ -122,8 +122,9 @@ namespace dcp2p
 	{
 		if (!error)
 		{
+			size_t bodyLength = packet_.body_length();
 			// if this is a single byte ping packet, ping back, or just ignore if it's a reply.
-			if (packet_.body_length() == 1)
+			if (bodyLength == 1)
 			{
 				unsigned char ping = packet_.body()[0];
 				if (ping == 0)
@@ -133,40 +134,37 @@ namespace dcp2p
 					Send(ping, 1);
 				}
 			}
-
-			std::string body(packet_.body(), packet_.body() + packet_.body_length());
-
-			if (_remoteId == "")
-			{
-				_remoteId = body.substr(0, packet_.body_length());
-				if (_localId != _remoteId)
-				{
-					NodeConnected(isIncoming_, shared_from_this(), _remoteId);
-
-					std::stringstream id_stream;
-					id_stream << _localId;
-
-					if (isIncoming_)
-						Send(std::string(id_stream.str()));
-				}
-				else
-				{
-					std::stringstream ss;
-					ss << "Dropped connection to self. " << socket_.remote_endpoint();
-					Log(std::string(ss.str()));
-
-					//socket_.shutdown(boost::asio::socket_base::shutdown_both);
-					//_io_service.stop();
-					return;
-				}
-			}
-			else if (packet_.body_length() == 1)
-			{
-				// do nothing, don't report a ping packet
-			}
 			else
-				ReceivedData(shared_from_this(), packet_);
+			{
+			  if (_remoteId == "")
+			  {
+				  std::string body(packet_.body(), packet_.body() + bodyLength);
+				  _remoteId = body.substr(0, bodyLength);
+				  if (_localId != _remoteId)
+				  {
+					  NodeConnected(isIncoming_, shared_from_this(), _remoteId);
 
+					  std::stringstream id_stream;
+					  id_stream << _localId;
+
+					  if (isIncoming_)
+						  Send(std::string(id_stream.str()));
+				  }
+				  else
+				  {
+					  std::stringstream ss;
+					  ss << "Dropped connection to self. " << socket_.remote_endpoint();
+					  Log(std::string(ss.str()));
+
+					  //socket_.shutdown(boost::asio::socket_base::shutdown_both);
+					  //_io_service.stop();
+					  return;
+				  }
+			  }
+			  else
+				  ReceivedData(shared_from_this(), packet_);
+			}
+			
 			if (write_queue_.empty())
 			{
 				// todo: this would be better if it continually checked for 3 secs if theres any queued outgoing,

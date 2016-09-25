@@ -91,14 +91,14 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 	std::string body(packet.body(), packet.body() + packet.body_length());
 	txt.append(body);
 
-	writeToRichText(txt);
+//	writeToRichText(txt);
 
 	unsigned char* cmd;
-	size_t cmdLength = 0;
+	unsigned int cmdLength = 0;
 
 	size_t offset = 0;
-	memcpy(&cmdLength, packet.body(), sizeof(size_t));
-	offset += sizeof(size_t);
+ 	memcpy(&cmdLength, packet.body(), sizeof(unsigned int));
+	offset += sizeof(unsigned int);
 
 	cmd = new unsigned char[cmdLength];
 
@@ -108,32 +108,32 @@ void dc_gui_mainform::OnDataReceived(p2p_connection::pointer connection, p2p_pac
 	if (std::string(cmd, cmd + cmdLength) == "MSG")
 	{
 		unsigned char* channel;
-		size_t channelLength = 0;
+		unsigned int channelLength = 0;
 
 		unsigned char* name;
-		size_t nameLength = 0;
+		unsigned int nameLength = 0;
 
 		unsigned char* msg;
-		size_t msgLength = 0;
+		unsigned int msgLength = 0;
 
-		memcpy(&channelLength, packet.body() + offset, sizeof(size_t));
-		offset += sizeof(size_t);
+		memcpy(&channelLength, packet.body() + offset, sizeof(unsigned int));
+		offset += sizeof(unsigned int);
 
 		channel = new unsigned char[channelLength];
 
 		memcpy(channel, packet.body() + offset, channelLength);
 		offset += channelLength;
 
-		memcpy(&nameLength, packet.body() + offset, sizeof(size_t));
-		offset += sizeof(size_t);
+		memcpy(&nameLength, packet.body() + offset, sizeof(unsigned int));
+		offset += sizeof(unsigned int);
 
 		name = new unsigned char[nameLength];
 
 		memcpy(name, packet.body() + offset, nameLength);
 		offset += nameLength;
 
-		memcpy(&msgLength, packet.body() + offset, sizeof(size_t));
-		offset += sizeof(size_t);
+		memcpy(&msgLength, packet.body() + offset, sizeof(unsigned int));
+		offset += sizeof(unsigned int);
 
 		msg = new unsigned char[msgLength];
 
