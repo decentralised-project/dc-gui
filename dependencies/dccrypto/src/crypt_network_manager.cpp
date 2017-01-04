@@ -54,7 +54,10 @@ namespace dccrypto
 	void crypt_network_manager::Shutdown()
 	{
 		if (_manager)
-			delete _manager;	
+		{
+			_manager->Shutdown();
+			delete _manager;
+		}
 
 		if (pkey)
 			EC_KEY_free(pkey);

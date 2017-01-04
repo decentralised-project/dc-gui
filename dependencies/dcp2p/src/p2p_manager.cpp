@@ -9,19 +9,15 @@ namespace dcp2p
 
 	p2p_manager::~p2p_manager()
 	{
+		delete _listenerThread;
 		delete _listener;
+		delete _workerA;
+	}
 
-		for (size_t i = 0; i < _connections.size(); i++)
-		{
-			_connections[i]->Shutdown();
-		}
+	void p2p_manager::Shutdown()
+	{
 		_connections.clear();
-
-		for (size_t i = 0; i < _threads.size(); i++)
-		{
-			_threads[i]->interrupt();
-			_threads[i]->join();
-		}
+		_threads.interrupt_all();
 	}
 
 	void p2p_manager::StoreConnection(p2p_connection::pointer connection)
@@ -34,8 +30,9 @@ namespace dcp2p
 		_networkId = uniqueSessionId;
 
 		// first, start the listener thread
-		boost::shared_ptr<boost::thread> listenerThread = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::listener_run, this, incomingPort));
-		_threads.push_back(listenerThread);
+		_listenerThread = _threads.create_thread(boost::bind(&p2p_manager::listener_run, this, incomingPort));
+		//boost::shared_ptr<boost::thread> listenerThread = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::listener_run, this, incomingPort));
+		//_threads.push_back(listenerThread);
 
 		// create a vector of dns seeds for the host manager
 		const std::string arr[] = { 
@@ -51,8 +48,10 @@ namespace dcp2p
 		//for (int i = 0; i < 5; ++i)
 		//{
 		
-			boost::shared_ptr<boost::thread> workerA = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::outgoing_run, this));
-			_threads.push_back(workerA);
+		_workerA = _threads.create_thread(boost::bind(&p2p_manager::outgoing_run, this));
+
+		//boost::shared_ptr<boost::thread> workerA = boost::shared_ptr<boost::thread>(new boost::thread(&p2p_manager::outgoing_run, this));
+		//_threads.push_back(workerA);
 
 			//boost::thread* workerB = new boost::thread(&p2p_manager::outgoing_run, this);
 			//_threads.push_back(workerB);

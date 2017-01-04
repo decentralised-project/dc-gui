@@ -45,7 +45,11 @@ namespace dcp2p
 		void listener_run(int incomingPort);
 		void outgoing_run();
 
-		std::vector<boost::shared_ptr<boost::thread>> _threads;
+		boost::thread_group _threads;
+		boost::thread* _listenerThread;
+		boost::thread* _workerA;
+
+		//std::vector<boost::shared_ptr<boost::thread>> _threads;
 		std::vector<p2p_connection::pointer> _connections;
 		p2p_listener* _listener;
 		p2p_hostmanager::pointer _host_manager;
